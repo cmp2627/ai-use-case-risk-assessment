@@ -12,7 +12,7 @@ A rules-based intake and risk-tiering tool for AI use cases. Someone describes h
 
 **[Try it live →](https://cmp2627.github.io/ai-use-case-risk-assessment/)**
 
-Four built-in examples show each outcome: a résumé screener (High), a customer support chatbot (Moderate), an internal coding assistant (Low) and a call-center mood monitor (Prohibited).
+Five built-in examples show each outcome: a résumé screener (High), a customer support chatbot (Moderate), an internal coding assistant and a personal car shopping helper (Low, fast-tracked), and a call-center mood monitor (Prohibited).
 
 ## Why I built it
 
@@ -26,6 +26,9 @@ AI governance platforms like OneTrust, LogicGate and ServiceNow give you an inta
 4. **Every result explains itself.** The tier, its drivers, and anything that raised it are shown on screen.
 
 ## How the logic works
+
+### 0. Quick screen and fast track
+Three yes/no questions come first: Will it make or influence decisions about other people? Will it use other people's personal or confidential information? Will anything it produces reach people outside your team? If all three are "No" and no sensitive capability is checked, the use case is fast-tracked: the decision and data sections are skipped, it's rated a Low-impact use, and it gets five light checks (log it, confirm acceptable use, use an approved tool with training turned off, verify facts from public sources, keep confidential data out). Example: a personal assistant that ranks cars you've test-driven. Anyone can still choose the full assessment.
 
 ### 1. Capability screen
 Section 02 asks what the system *does* (detects emotions, identifies people from biometrics, tailors offers by financial situation, scores trustworthiness, predicts crime). Follow-ups appear only when relevant: what it's for, who it's used on, how the output is used. The engine combines those answers with the rest of the intake:

@@ -69,7 +69,8 @@ html{scroll-behavior:smooth;scroll-padding-top:16px}
 .intro h1{font-size:30px;font-weight:700;line-height:1.15}
 .intro p{color:var(--muted);max-width:70ch;margin:6px 0 0}
 .scen-label{font:500 12px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:4px 0 -6px}
-.scenarios{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.scenarios{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+@media (max-width:1240px){.scenarios{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:900px){.scenarios{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .scen{display:grid;gap:6px;text-align:left;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;box-shadow:var(--shadow);transition:border-color .15s,transform .15s}
 .scen:hover{border-color:var(--accent);transform:translateY(-1px)}
@@ -117,7 +118,8 @@ input[type="text"]:hover,textarea:hover,select:hover{border-color:color-mix(in s
 input[type="text"]:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 textarea{min-height:88px;resize:vertical}
 button:focus-visible,.opt input:focus-visible + span,.check input:focus-visible,.step:focus-visible,.scen:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}
+.field{align-content:start}
 .opt{position:relative;display:flex}
 .opt input{position:absolute;opacity:0;width:1px;height:1px}
 .opt span{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-size:13.5px;cursor:pointer;line-height:1.35;transition:border-color .15s,background .15s}
@@ -146,6 +148,20 @@ button:focus-visible,.opt input:focus-visible + span,.check input:focus-visible,
 .laws{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .laws li{display:grid;gap:2px;font-size:13.5px;padding:10px 12px;border-radius:8px;background:var(--surface-2);border:1px solid var(--line)}
 .laws b{font-weight:600;font-size:13px}
+.quick{display:grid;gap:16px;padding:16px 18px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line)}
+.quick-head{display:grid;gap:2px}
+.quick-head b{font:600 15px/1.3 var(--display);display:flex;align-items:center;gap:8px}
+.quick-head b svg.i{color:var(--accent)}
+.quick-head span{font-size:13px;color:var(--muted)}
+.fast-note{display:none;flex-wrap:wrap;align-items:center;gap:8px 14px;font-size:13.5px;padding:11px 14px;border-radius:8px;background:var(--low-bg);border:1px solid color-mix(in srgb,var(--low) 40%,transparent)}
+.fast-note.show{display:flex}
+.fast-note b{color:var(--low)}
+.fast-note label{display:flex;align-items:center;gap:6px;margin-left:auto;font-size:13px;cursor:pointer}
+.fast-note input{accent-color:var(--accent)}
+.skipnote{display:none;padding:14px 20px;font-size:13.5px;color:var(--muted)}
+fieldset.skipped .sec-body{display:none}
+fieldset.skipped .skipnote{display:block}
+fieldset.skipped .sec-ic{background:var(--surface-2);color:var(--muted)}
 .hidden{display:none!important}
 
 /* Result panel */
@@ -226,7 +242,7 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display
   <section class="intro">
     <div>
       <h1>Is this AI use case safe to launch?</h1>
-      <p>Describe how you want to use AI and answer five short sections. You'll get a risk tier with the reasons behind it, the laws and frameworks that apply where you operate, the controls required before launch, and who needs to approve it.</p>
+      <p>Describe how you want to use AI. Simple, personal uses are fast-tracked after three questions; anything that affects other people gets the full five-section review. You'll get a risk tier with the reasons behind it, the laws and frameworks that apply where you operate, the controls required before launch, and who needs to approve it.</p>
     </div>
     <div class="scen-label">Try a scenario</div>
     <div class="scenarios" id="scenarios" role="group" aria-label="Load an example use case"></div>
@@ -263,6 +279,13 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display
             <div class="field"><div class="q" id="q-deploy">Who uses it</div><div class="seg" data-radio="deploy" aria-labelledby="q-deploy"></div></div>
           </div>
           <div class="field"><div class="q" id="q-juris">Where are the people it affects?</div><div class="hint">Select all that apply. Only the laws for these places appear in the results.</div><div class="seg" data-multi="juris" aria-labelledby="q-juris"></div></div>
+          <div class="quick">
+            <div class="quick-head"><b><svg class="i" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>Quick screen</b><span>Three questions decide how deep this assessment needs to go.</span></div>
+            <div class="field"><div class="q" id="q-q_others">Will it make or influence decisions about other people?</div><div class="seg" data-radio="q_others" aria-labelledby="q-q_others"></div></div>
+            <div class="field"><div class="q" id="q-q_data">Will it use other people’s personal or confidential information?</div><div class="seg" data-radio="q_data" aria-labelledby="q-q_data"></div></div>
+            <div class="field"><div class="q" id="q-q_external">Will anything it produces reach people outside your team, like customers or the public?</div><div class="seg" data-radio="q_external" aria-labelledby="q-q_external"></div></div>
+            <div class="fast-note" id="fast-note" aria-live="polite"><span><b>Fast track.</b> This looks like a low-impact use, so sections 03 and 04 are skipped.</span><label><input type="checkbox" id="full">Do the full assessment anyway</label></div>
+          </div>
         </div>
       </fieldset>
 
@@ -273,6 +296,7 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display
 
       <fieldset id="sec-3">
         <legend><div class="sec-head"><span class="sec-ic"><svg class="i" viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M7 7l-3 6a3 3 0 0 0 6 0zM17 7l-3 6a3 3 0 0 0 6 0zM8 21h8"/></svg></span><div><h2>Decisions and domain <em>03</em></h2><p>Risk depends on whose life the output touches, and how much.</p></div></div></legend>
+        <div class="skipnote">Skipped on the fast track. Answer “Yes” to a quick-screen question, or choose the full assessment, to fill this in.</div>
         <div class="sec-body">
           <div class="field">
             <label for="domain">Area the output is used in</label>
@@ -288,6 +312,7 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display
 
       <fieldset id="sec-4">
         <legend><div class="sec-head"><span class="sec-ic"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg></span><div><h2>People and data <em>04</em></h2><p>Who is affected, how many, and what data it touches.</p></div></div></legend>
+        <div class="skipnote">Skipped on the fast track. Answer “Yes” to a quick-screen question, or choose the full assessment, to fill this in.</div>
         <div class="sec-body">
           <div class="field"><div class="q" id="q-data">Data it processes</div><div class="hint">Select all that apply.</div><div class="seg" data-multi="data" aria-labelledby="q-data"></div></div>
           <div class="field"><div class="q" id="q-people">People affected by the output</div><div class="hint">Select all that apply.</div><div class="seg" data-multi="people" aria-labelledby="q-people"></div></div>
@@ -325,14 +350,17 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display
 
 const OPTS = {
   role:[['build','We build or train it'],['buy','We buy or use a vendor tool']],
-  deploy:[['internal','Internal staff only'],['customer','Our customers'],['public','The general public']],
+  deploy:[['self','Just me (personal use)'],['internal','Internal staff only'],['customer','Our customers'],['public','The general public']],
   decision:[['info','Informational only'],['support','Supports a human decision'],['auto','Makes the decision automatically']],
   data:[['public','Public data'],['internal','Internal business data'],['personal','Personal data'],['financial','Financial or credit data'],['sensitive','Sensitive data (health, biometrics, race, religion, sexuality)'],['children','Children’s data']],
-  people:[['employees','Employees or contractors'],['customers','Customers'],['public','Applicants or the general public'],['vulnerable','Vulnerable groups (minors, patients, elderly)']],
+  people:[['self','Only the person using it'],['employees','Employees or contractors'],['customers','Customers'],['public','Applicants or the general public'],['vulnerable','Vulnerable groups (minors, patients, elderly)']],
   scale:[['small','Under 100'],['mid','100 to 10,000'],['large','Over 10,000']],
   reversibility:[['easy','Easy to reverse'],['hard','Hard to reverse'],['irreversible','Irreversible or severe']],
   source:[['api','Third-party model API'],['vendor','Vendor product with built-in AI'],['oss','Open-source, self-hosted'],['inhouse','Built in-house']],
   training:[['no','No, contractually barred'],['yes','Yes'],['unknown','Not sure']],
+  q_others:[['no','No'],['yes','Yes']],
+  q_data:[['no','No'],['yes','Yes']],
+  q_external:[['no','No'],['yes','Yes']],
   juris:[['us','United States'],['california','California'],['colorado','Colorado'],['nyc','New York City'],['eu','EU or EEA'],['uk','United Kingdom'],['other','Other countries']],
   oversight:[['every','A person reviews every output'],['spot','People spot-check and can override'],['none','No human in the loop']]
 };
@@ -373,10 +401,11 @@ const DOMAINS = {
 };
 
 const EXAMPLES = {
-  resume:{juris:['us','california','nyc'],name:'Résumé screening assistant',owner:'Talent Acquisition',desc:'Vendor tool that reads job applications, scores each candidate against the job description, and ranks them so recruiters can decide who to interview.',role:'buy',deploy:'internal',caps:[],follow:{},domain:'employment',decision:'support',profiling:true,narrow:false,data:['personal'],people:['public'],scale:'mid',reversibility:'hard',source:'vendor',training:'unknown',oversight:'spot',interacts:false,generates:false},
-  chatbot:{juris:['us','eu'],name:'Customer support chatbot',owner:'Customer Experience',desc:'LLM chatbot on the help center that answers account and billing questions and looks up order status. Hands off to a human agent on request.',role:'build',deploy:'public',caps:[],follow:{},domain:'none',decision:'info',profiling:false,narrow:false,data:['personal'],people:['customers'],scale:'large',reversibility:'easy',source:'api',training:'no',oversight:'none',interacts:true,generates:false},
-  code:{juris:['us'],name:'Internal coding assistant',owner:'Engineering',desc:'Engineers use an AI coding assistant in their IDE to suggest code and write tests. All code still goes through pull-request review.',role:'buy',deploy:'internal',caps:[],follow:{},domain:'none',decision:'support',profiling:false,narrow:false,data:['internal'],people:['employees'],scale:'small',reversibility:'easy',source:'vendor',training:'no',oversight:'every',interacts:false,generates:false},
-  emotion:{juris:['us','eu'],name:'Call-center mood monitor',owner:'Contact Center Operations',desc:'Analyzes agents’ voice and webcam during calls to detect frustration or stress, and flags agents to supervisors for coaching.',role:'buy',deploy:'internal',caps:['c_emotion'],follow:{f_emo_purpose:'other'},domain:'employment',decision:'support',profiling:true,narrow:false,data:['personal','sensitive'],people:['employees'],scale:'mid',reversibility:'hard',source:'vendor',training:'unknown',oversight:'spot',interacts:false,generates:false},
+  resume:{q_others:'yes',q_data:'yes',q_external:'no',juris:['us','california','nyc'],name:'Résumé screening assistant',owner:'Talent Acquisition',desc:'Vendor tool that reads job applications, scores each candidate against the job description, and ranks them so recruiters can decide who to interview.',role:'buy',deploy:'internal',caps:[],follow:{},domain:'employment',decision:'support',profiling:true,narrow:false,data:['personal'],people:['public'],scale:'mid',reversibility:'hard',source:'vendor',training:'unknown',oversight:'spot',interacts:false,generates:false},
+  chatbot:{q_others:'no',q_data:'yes',q_external:'yes',juris:['us','eu'],name:'Customer support chatbot',owner:'Customer Experience',desc:'LLM chatbot on the help center that answers account and billing questions and looks up order status. Hands off to a human agent on request.',role:'build',deploy:'public',caps:[],follow:{},domain:'none',decision:'info',profiling:false,narrow:false,data:['personal'],people:['customers'],scale:'large',reversibility:'easy',source:'api',training:'no',oversight:'none',interacts:true,generates:false},
+  code:{q_others:'no',q_data:'no',q_external:'no',juris:['us'],name:'Internal coding assistant',owner:'Engineering',desc:'Engineers use an AI coding assistant in their IDE to suggest code and write tests. All code still goes through pull-request review.',role:'buy',deploy:'internal',caps:[],follow:{},domain:'none',decision:'support',profiling:false,narrow:false,data:['internal'],people:['employees'],scale:'small',reversibility:'easy',source:'vendor',training:'no',oversight:'every',interacts:false,generates:false},
+  emotion:{q_others:'yes',q_data:'yes',q_external:'no',juris:['us','eu'],name:'Call-center mood monitor',owner:'Contact Center Operations',desc:'Analyzes agents’ voice and webcam during calls to detect frustration or stress, and flags agents to supervisors for coaching.',role:'buy',deploy:'internal',caps:['c_emotion'],follow:{f_emo_purpose:'other'},domain:'employment',decision:'support',profiling:true,narrow:false,data:['personal','sensitive'],people:['employees'],scale:'mid',reversibility:'hard',source:'vendor',training:'unknown',oversight:'spot',interacts:false,generates:false},
+  car:{q_others:'no',q_data:'no',q_external:'no',juris:['us'],name:'Car shopping helper',owner:'Me',desc:'Log the cars I\u2019ve test-driven, then rank them and help me decide which to buy, using my notes and priorities plus public data like reviews, safety ratings and prices.',role:'buy',deploy:'self',caps:[],follow:{},domain:'none',decision:'support',profiling:false,narrow:false,data:['public'],people:['self'],scale:'small',reversibility:'easy',source:'api',training:'unknown',oversight:'every',interacts:false,generates:false},
   blank:{juris:['us'],name:'',owner:'',desc:'',role:'buy',deploy:'internal',caps:[],follow:{},domain:'none',decision:'info',profiling:false,narrow:false,data:[],people:[],scale:'small',reversibility:'easy',source:'api',training:'unknown',oversight:'every',interacts:false,generates:false}
 };
 
@@ -415,24 +444,32 @@ $('#domain').innerHTML = Object.entries(DOMAINS).map(([k,d])=>`<option value="${
 function read(){
   const radio = n => (document.querySelector(`input[name="${n}"]:checked`)||{}).value;
   const multi = n => [...document.querySelectorAll(`input[name="${n}"]:checked`)].map(i=>i.value);
-  return {
+  return applyFast({
     name:$('#name').value.trim(), owner:$('#owner').value.trim(), desc:$('#desc').value.trim(),
     role:radio('role'), deploy:radio('deploy'), caps:multi('caps'), follow:Object.fromEntries(CAPS.filter(c=>c.follow).map(c=>[c.follow.id,radio(c.follow.id)])), domain:$('#domain').value,
     decision:radio('decision'), profiling:$('#profiling').checked, narrow:$('#narrow').checked,
     data:multi('data'), people:multi('people'), juris:multi('juris'), scale:radio('scale'), reversibility:radio('reversibility'),
     source:radio('source'), training:radio('training'), oversight:radio('oversight'),
-    interacts:$('#interacts').checked, generates:$('#generates').checked
-  };
+    interacts:$('#interacts').checked, generates:$('#generates').checked,
+    q_others:radio('q_others'), q_data:radio('q_data'), q_external:radio('q_external'), full:$('#full').checked
+  });
+}
+/* Fast track: no decisions about others, no one else's data, nothing leaves the team, no sensitive capability.
+   Sections 03 and 04 are skipped and filled with low-impact values. */
+function applyFast(s){
+  s.fast = s.q_others==='no' && s.q_data==='no' && s.q_external==='no' && !(s.caps||[]).length && !s.full;
+  if(s.fast) Object.assign(s,{domain:'none',decision:'support',profiling:false,narrow:false,data:['public'],people:['self'],scale:'small',reversibility:'easy',interacts:false,generates:false});
+  return s;
 }
 function load(s){
   $('#name').value=s.name; $('#owner').value=s.owner; $('#desc').value=s.desc; $('#domain').value=s.domain;
-  ['role','deploy','decision','scale','reversibility','source','training','oversight'].forEach(n=>{
+  ['role','deploy','decision','scale','reversibility','source','training','oversight','q_others','q_data','q_external'].forEach(n=>{
     document.querySelectorAll(`input[name="${n}"]`).forEach(i=>i.checked=(i.value===s[n]));
   });
   ['data','people','caps','juris'].forEach(n=>{
     document.querySelectorAll(`input[name="${n}"]`).forEach(i=>i.checked=(s[n]||[]).includes(i.value));
   });
-  ['profiling','narrow','interacts','generates'].forEach(k=>$('#'+k).checked=!!s[k]);
+  ['profiling','narrow','interacts','generates','full'].forEach(k=>$('#'+k).checked=!!s[k]);
   CAPS.forEach(c=>{ if(c.follow) document.querySelectorAll(`input[name="${c.follow.id}"]`).forEach(i=>i.checked=((s.follow||{})[c.follow.id]===i.value)); });
   update();
 }
@@ -518,6 +555,8 @@ function classify(s){
   const {P,H,open} = screen(s);
   if(P.length) return {cls:'prohibited',floor:5,title:'Unacceptable risk',
     reasons:[...P.map(p=>p[1]),'Uses like this are banned in the EU and break most AI acceptable-use policies.']};
+  if(s.fast) return {cls:'minimal',floor:1,title:'Low-impact use',
+    reasons:['It doesn\u2019t make decisions about other people, use their personal information, or reach anyone outside your team.','If any of that changes, rerun the assessment.']};
   if(open.length) return {cls:'review',floor:4,title:'Possible unacceptable risk',
     reasons:['Section 02 needs an answer on '+open.join('; ')+'.','Until it\u2019s answered, the use case is treated as Critical.']};
   if(d.area){
@@ -558,6 +597,14 @@ function controls(s,t,reg){
     add('AI-00','Stop. Don\u2019t deploy or pilot. Get a Legal review and document the decision.','GOVERN',true);
     add('AI-01','Record the use case and decision in the AI inventory.','GOVERN');
     if(vendor) add('AI-04','Notify Procurement and TPRM so the vendor isn\u2019t onboarded for this purpose.','GOVERN \u00b7 TPRM');
+    return L;
+  }
+  if(s.fast && t<=2){
+    add('AI-01','Log it in the AI inventory. A one-line entry is enough.','GOVERN');
+    add('AI-03','Confirm the use fits the AI acceptable-use policy.','GOVERN');
+    if(vendor) add('AI-05','Use an approved AI tool, and turn off training on your inputs where the tool allows it.','GOVERN \u00b7 TPRM');
+    add('AI-25','Check facts the AI pulls from public sources before you rely on them.','MEASURE');
+    add('AI-26','Keep confidential company information out of it.','GOVERN');
     return L;
   }
   const RF = screen(s).R.map(r=>r.id);
@@ -634,6 +681,7 @@ const FN_CLASS = {GOVERN:'gov',MAP:'map',MEASURE:'meas',MANAGE:'man'};
 const CIRC = 2*Math.PI*40;
 
 function evaluate(s){
+  s = applyFast({...s});
   const sc = score(s), reg = classify(s), b = band(sc.value), rf = screen(s).R;
   const t = reg.floor===5 ? 5 : Math.max(b, reg.floor, rf.length?3:0);
   const raisedBy = t===b||t===5 ? '' : (reg.floor>=t ? 'its risk classification' : 'red flags');
@@ -730,6 +778,8 @@ function update(){
     catch(e){ $('#copied').textContent='Copy was blocked by the browser. Select and copy from the panel instead.'; }
   });
   CAPS.forEach(c=>{ if(c.follow) $('#fw-'+c.id).classList.toggle('hidden', !s.caps.includes(c.id)); });
+  ['#sec-3','#sec-4'].forEach(q=>$(q).classList.toggle('skipped', s.fast));
+  $('#fast-note').classList.toggle('show', s.fast || (s.full && s.q_others==='no' && s.q_data==='no' && s.q_external==='no' && !s.caps.length));
   stepper(s);
   suggest(s);
 }
@@ -737,10 +787,10 @@ function update(){
 /* ---------- Section navigator ---------- */
 function stepper(s){
   const done = {
-    1: !!(s.name && s.desc && s.role && s.deploy && (s.juris||[]).length),
+    1: !!(s.name && s.desc && s.role && s.deploy && (s.juris||[]).length && s.q_others && s.q_data && s.q_external),
     2: screen(s).open.length===0,
-    3: !!(s.domain && s.decision),
-    4: s.data.length>0 && s.people.length>0 && !!s.scale && !!s.reversibility,
+    3: s.fast || !!(s.domain && s.decision),
+    4: s.fast || (s.data.length>0 && s.people.length>0 && !!s.scale && !!s.reversibility),
     5: !!(s.source && s.oversight)
   };
   let n=0;
@@ -762,6 +812,7 @@ const SCEN_BLURB = {
   chatbot:'Answers customer billing questions',
   code:'Suggests code in engineers’ IDEs',
   emotion:'Reads agents’ stress from voice and video',
+  car:'Ranks cars you test-drove to help you choose',
   blank:'Assess your own use case'
 };
 $('#scenarios').innerHTML = Object.keys(EXAMPLES).map(k=>{

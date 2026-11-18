@@ -138,6 +138,13 @@ button:focus-visible,.opt input:focus-visible + span,.check input:focus-visible,
 .suggest.show{display:flex}
 .suggest svg.i{color:var(--accent)}
 .suggest button{margin-left:auto;font:600 12.5px/1 var(--body);border:0;background:var(--accent);color:var(--surface);padding:7px 12px;border-radius:6px;cursor:pointer}
+.cap{border:1px solid var(--line);border-radius:9px;background:var(--surface);overflow:hidden;transition:border-color .15s}
+.cap .check{border:0;border-radius:0}
+.cap:has(> .check input:checked){border-color:var(--accent)}
+.follow{padding:12px 14px 14px 43px;border-top:1px dashed var(--line);background:var(--surface-2);display:grid;gap:8px}
+.follow .q{font-size:13px}
+.flagbox{display:grid;gap:8px;padding:14px;border-radius:10px;background:var(--crit-bg);border:1px solid color-mix(in srgb,var(--crit) 35%,transparent);border-left:4px solid var(--crit)}
+.flagbox ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:13.5px}
 .hidden{display:none!important}
 
 /* Result panel */
@@ -223,7 +230,7 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display
     <nav class="stepper" aria-label="Assessment sections">
       <div class="cap">Sections</div>
       <a class="step" href="#sec-1" id="st-1"><span class="dot">1</span>The use case</a>
-      <a class="step" href="#sec-2" id="st-2"><span class="dot">2</span>Prohibited screen</a>
+      <a class="step" href="#sec-2" id="st-2"><span class="dot">2</span>Capabilities</a>
       <a class="step" href="#sec-3" id="st-3"><span class="dot">3</span>Decisions &amp; domain</a>
       <a class="step" href="#sec-4" id="st-4"><span class="dot">4</span>People &amp; data</a>
       <a class="step" href="#sec-5" id="st-5"><span class="dot">5</span>Model &amp; oversight</a>
@@ -253,8 +260,8 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display
       </fieldset>
 
       <fieldset id="sec-2">
-        <legend><div class="sec-head"><span class="sec-ic danger"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg></span><div><h2>Prohibited practice screen <em>02</em></h2><p>EU AI Act Art. 5. Check anything the system does, even partly.</p></div></div></legend>
-        <div class="sec-body"><div class="checks" data-checks="prohibited"></div></div>
+        <legend><div class="sec-head"><span class="sec-ic"><svg class="i" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><div><h2>What the system can do <em>02</em></h2><p>Check any capability the system has, even if it's a minor feature. Follow-up questions appear where they matter.</p></div></div></legend>
+        <div class="sec-body"><div class="checks" id="caps"></div><p class="hint" style="margin:0">None of these apply? Leave them all unchecked and move on.</p></div>
       </fieldset>
 
       <fieldset id="sec-3">
@@ -322,15 +329,23 @@ const OPTS = {
   oversight:[['every','A person reviews every output'],['spot','People spot-check and can override'],['none','No human in the loop']]
 };
 
-const PROHIBITED = [
-  ['p_manip','Uses subliminal, manipulative or deceptive techniques that distort behavior and cause significant harm','5(1)(a)'],
-  ['p_exploit','Exploits vulnerabilities due to age, disability or economic situation','5(1)(b)'],
-  ['p_social','Social scoring that leads to unjustified or unrelated detrimental treatment','5(1)(c)'],
-  ['p_crime','Predicts a person’s risk of committing a crime based only on profiling or personality traits','5(1)(d)'],
-  ['p_scrape','Builds facial recognition databases by untargeted scraping of images','5(1)(e)'],
-  ['p_emotion','Infers emotions of people at work or in education (outside medical or safety reasons)','5(1)(f)'],
-  ['p_biocat','Uses biometrics to infer race, political views, union membership, religion or sexual orientation','5(1)(g)'],
-  ['p_rbi','Real-time remote biometric identification in public spaces for law enforcement','5(1)(h)']
+/* Neutral capability questions. The engine, not the user, decides whether an answer combination is an Art. 5 practice. */
+const CAPS = [
+  {id:'c_emotion',q:'Detects or infers emotions, mood, stress, attention or intent',
+    follow:{id:'f_emo_purpose',q:'What is it for?',opts:[['safety','Medical or safety reasons (e.g., driver fatigue alerts)'],['other','Performance, coaching, engagement, sales or anything else']]}},
+  {id:'c_bioid',q:'Recognizes or identifies people from their face, voice, fingerprints or gait',
+    follow:{id:'f_bio_set',q:'How is it used?',opts:[['verify','Confirms a person is who they claim (e.g., phone unlock, badge entry)'],['identify','Picks people out of a crowd, footage or a database'],['rbi','Live identification in public spaces for police']]}},
+  {id:'c_biocat',q:'Sorts or labels people by traits inferred from their face, body or voice (e.g., age, gender)',
+    follow:{id:'f_bio_sens',q:'Does it infer any of these?',opts:[['yes','Race, religion, political views, union membership or sexual orientation'],['no','None of these']]}},
+  {id:'c_scrape',q:'Collects face images from the internet or CCTV to build or grow a face database',follow:null},
+  {id:'c_target',q:'Tailors offers, prices or persuasion to people based on age, disability or financial situation',
+    follow:{id:'f_target_harm',q:'Could it steer people toward choices that hurt them (e.g., high-interest loans, gambling)?',opts:[['yes','Yes or possibly'],['no','No']]}},
+  {id:'c_nudge',q:'Influences choices with techniques people may not notice (hidden cues, dark patterns, exploiting biases)',
+    follow:{id:'f_nudge_harm',q:'Could that cause significant financial, physical or psychological harm?',opts:[['yes','Yes or possibly'],['no','No']]}},
+  {id:'c_trust',q:'Gives people an overall trustworthiness, reliability or social behavior score',
+    follow:{id:'f_trust_use',q:'How is the score used?',opts:[['other','In unrelated situations, or in ways that treat people worse than their behavior warrants'],['same','Only for the purpose the data was collected for, in proportion']]}},
+  {id:'c_crime',q:'Predicts whether a person will commit a crime or offense',
+    follow:{id:'f_crime_basis',q:'What is the prediction based on?',opts:[['profile','Profiling or personality traits alone'],['facts','Objective, verifiable facts tied to a specific crime, supporting a human assessment']]}}
 ];
 
 const DOMAINS = {
@@ -349,11 +364,11 @@ const DOMAINS = {
 };
 
 const EXAMPLES = {
-  resume:{name:'Résumé screening assistant',owner:'Talent Acquisition',desc:'Vendor tool that reads job applications, scores each candidate against the job description, and ranks them so recruiters can decide who to interview.',role:'buy',deploy:'internal',prohibited:[],domain:'employment',decision:'support',profiling:true,narrow:false,data:['personal'],people:['public'],scale:'mid',reversibility:'hard',source:'vendor',training:'unknown',oversight:'spot',interacts:false,generates:false},
-  chatbot:{name:'Customer support chatbot',owner:'Customer Experience',desc:'LLM chatbot on the help center that answers account and billing questions and looks up order status. Hands off to a human agent on request.',role:'build',deploy:'public',prohibited:[],domain:'none',decision:'info',profiling:false,narrow:false,data:['personal'],people:['customers'],scale:'large',reversibility:'easy',source:'api',training:'no',oversight:'none',interacts:true,generates:false},
-  code:{name:'Internal coding assistant',owner:'Engineering',desc:'Engineers use an AI coding assistant in their IDE to suggest code and write tests. All code still goes through pull-request review.',role:'buy',deploy:'internal',prohibited:[],domain:'none',decision:'support',profiling:false,narrow:false,data:['internal'],people:['employees'],scale:'small',reversibility:'easy',source:'vendor',training:'no',oversight:'every',interacts:false,generates:false},
-  emotion:{name:'Call-center mood monitor',owner:'Contact Center Operations',desc:'Analyzes agents’ voice and webcam during calls to detect frustration or stress, and flags agents to supervisors for coaching.',role:'buy',deploy:'internal',prohibited:['p_emotion'],domain:'employment',decision:'support',profiling:true,narrow:false,data:['personal','sensitive'],people:['employees'],scale:'mid',reversibility:'hard',source:'vendor',training:'unknown',oversight:'spot',interacts:false,generates:false},
-  blank:{name:'',owner:'',desc:'',role:'buy',deploy:'internal',prohibited:[],domain:'none',decision:'info',profiling:false,narrow:false,data:[],people:[],scale:'small',reversibility:'easy',source:'api',training:'unknown',oversight:'every',interacts:false,generates:false}
+  resume:{name:'Résumé screening assistant',owner:'Talent Acquisition',desc:'Vendor tool that reads job applications, scores each candidate against the job description, and ranks them so recruiters can decide who to interview.',role:'buy',deploy:'internal',caps:[],follow:{},domain:'employment',decision:'support',profiling:true,narrow:false,data:['personal'],people:['public'],scale:'mid',reversibility:'hard',source:'vendor',training:'unknown',oversight:'spot',interacts:false,generates:false},
+  chatbot:{name:'Customer support chatbot',owner:'Customer Experience',desc:'LLM chatbot on the help center that answers account and billing questions and looks up order status. Hands off to a human agent on request.',role:'build',deploy:'public',caps:[],follow:{},domain:'none',decision:'info',profiling:false,narrow:false,data:['personal'],people:['customers'],scale:'large',reversibility:'easy',source:'api',training:'no',oversight:'none',interacts:true,generates:false},
+  code:{name:'Internal coding assistant',owner:'Engineering',desc:'Engineers use an AI coding assistant in their IDE to suggest code and write tests. All code still goes through pull-request review.',role:'buy',deploy:'internal',caps:[],follow:{},domain:'none',decision:'support',profiling:false,narrow:false,data:['internal'],people:['employees'],scale:'small',reversibility:'easy',source:'vendor',training:'no',oversight:'every',interacts:false,generates:false},
+  emotion:{name:'Call-center mood monitor',owner:'Contact Center Operations',desc:'Analyzes agents’ voice and webcam during calls to detect frustration or stress, and flags agents to supervisors for coaching.',role:'buy',deploy:'internal',caps:['c_emotion'],follow:{f_emo_purpose:'other'},domain:'employment',decision:'support',profiling:true,narrow:false,data:['personal','sensitive'],people:['employees'],scale:'mid',reversibility:'hard',source:'vendor',training:'unknown',oversight:'spot',interacts:false,generates:false},
+  blank:{name:'',owner:'',desc:'',role:'buy',deploy:'internal',caps:[],follow:{},domain:'none',decision:'info',profiling:false,narrow:false,data:[],people:[],scale:'small',reversibility:'easy',source:'api',training:'unknown',oversight:'every',interacts:false,generates:false}
 };
 
 
@@ -384,7 +399,7 @@ document.querySelectorAll('[data-multi]').forEach(el=>{
   const n = el.dataset.multi; el.setAttribute('role','group');
   el.innerHTML = OPTS[n].map(([v,l])=>`<label class="opt"><input type="checkbox" name="${n}" id="${n}-${v}" value="${v}"><span>${esc(l)}</span></label>`).join('');
 });
-$('[data-checks="prohibited"]').innerHTML = PROHIBITED.map(([v,l,r])=>`<label class="check danger"><input type="checkbox" name="prohibited" id="${v}" value="${v}"><span>${esc(l)}</span><span class="ref">Art. ${r}</span></label>`).join('');
+$('#caps').innerHTML = CAPS.map(c=>`<div class="cap"><label class="check"><input type="checkbox" name="caps" id="${c.id}" value="${c.id}"><span>${esc(c.q)}</span></label>${c.follow?`<div class="follow hidden" id="fw-${c.id}"><div class="q" id="q-${c.follow.id}">${esc(c.follow.q)}</div><div class="seg" role="radiogroup" aria-labelledby="q-${c.follow.id}">${c.follow.opts.map(([v,l])=>`<label class="opt"><input type="radio" name="${c.follow.id}" id="${c.follow.id}-${v}" value="${v}"><span>${esc(l)}</span></label>`).join('')}</div></div>`:''}</div>`).join('');
 $('#domain').innerHTML = Object.entries(DOMAINS).map(([k,d])=>`<option value="${k}">${esc(d.label)}${d.eu?' — '+d.eu:''}</option>`).join('');
 
 /* ---------- State ---------- */
@@ -393,7 +408,7 @@ function read(){
   const multi = n => [...document.querySelectorAll(`input[name="${n}"]:checked`)].map(i=>i.value);
   return {
     name:$('#name').value.trim(), owner:$('#owner').value.trim(), desc:$('#desc').value.trim(),
-    role:radio('role'), deploy:radio('deploy'), prohibited:multi('prohibited'), domain:$('#domain').value,
+    role:radio('role'), deploy:radio('deploy'), caps:multi('caps'), follow:Object.fromEntries(CAPS.filter(c=>c.follow).map(c=>[c.follow.id,radio(c.follow.id)])), domain:$('#domain').value,
     decision:radio('decision'), profiling:$('#profiling').checked, narrow:$('#narrow').checked,
     data:multi('data'), people:multi('people'), scale:radio('scale'), reversibility:radio('reversibility'),
     source:radio('source'), training:radio('training'), oversight:radio('oversight'),
@@ -405,10 +420,11 @@ function load(s){
   ['role','deploy','decision','scale','reversibility','source','training','oversight'].forEach(n=>{
     document.querySelectorAll(`input[name="${n}"]`).forEach(i=>i.checked=(i.value===s[n]));
   });
-  ['data','people','prohibited'].forEach(n=>{
+  ['data','people','caps'].forEach(n=>{
     document.querySelectorAll(`input[name="${n}"]`).forEach(i=>i.checked=s[n].includes(i.value));
   });
   ['profiling','narrow','interacts','generates'].forEach(k=>$('#'+k).checked=!!s[k]);
+  CAPS.forEach(c=>{ if(c.follow) document.querySelectorAll(`input[name="${c.follow.id}"]`).forEach(i=>i.checked=((s.follow||{})[c.follow.id]===i.value)); });
   update();
 }
 
@@ -439,11 +455,66 @@ function score(s){
   return {factors:f, value:Math.round(raw/FACTOR_MAX*100)};
 }
 
+/* Turns neutral answers into Art. 5 findings (P), high-risk biometric uses (H), unanswered follow-ups (open) and red flags (R). */
+function screen(s){
+  const has = c => s.caps.includes(c), f = s.follow||{};
+  const P=[], H=[], open=[], R=[];
+  const workOrSchool = s.people.includes('employees') || ['employment','education'].includes(s.domain);
+  if(has('c_emotion')){
+    if(!f.f_emo_purpose) open.push('what emotion detection is for');
+    else if(f.f_emo_purpose!=='safety' && workOrSchool) P.push(['5(1)(f)','It infers the emotions of people at work or in education, for a purpose other than medical or safety reasons.']);
+    else H.push(['Annex III §1(c)','It recognizes emotions, a listed high-risk biometric use.']);
+  }
+  if(has('c_bioid')){
+    if(!f.f_bio_set) open.push('how biometric identification is used');
+    else if(f.f_bio_set==='rbi') P.push(['5(1)(h)','It identifies people live in public spaces for law enforcement. Only narrow, pre-authorized exceptions exist.']);
+    else if(f.f_bio_set==='identify') H.push(['Annex III §1(a)','It identifies people remotely from biometric data.']);
+  }
+  if(has('c_biocat')){
+    if(!f.f_bio_sens) open.push('which traits biometric categorization infers');
+    else if(f.f_bio_sens==='yes') P.push(['5(1)(g)','It uses biometric data to infer race, religion, political views, union membership or sexual orientation.']);
+    else H.push(['Annex III §1(b)','It categorizes people by biometric traits.']);
+  }
+  if(has('c_scrape')) P.push(['5(1)(e)','It builds or grows a facial recognition database from untargeted internet or CCTV images.']);
+  if(has('c_target')){
+    if(!f.f_target_harm) open.push('whether targeting could steer people into harm');
+    else if(f.f_target_harm==='yes') P.push(['5(1)(b)','It exploits vulnerabilities from age, disability or financial situation in ways that can harm people.']);
+  }
+  if(has('c_nudge')){
+    if(!f.f_nudge_harm) open.push('whether hidden influence could cause significant harm');
+    else if(f.f_nudge_harm==='yes') P.push(['5(1)(a)','It uses techniques people may not notice to distort their choices, with a risk of significant harm.']);
+  }
+  if(has('c_trust')){
+    if(!f.f_trust_use) open.push('how the trustworthiness score is used');
+    else if(f.f_trust_use==='other') P.push(['5(1)(c)','It scores people’s trustworthiness or social behavior, and the score leads to unfair treatment or is used in unrelated contexts.']);
+  }
+  if(has('c_crime')){
+    if(!f.f_crime_basis) open.push('what crime predictions are based on');
+    else if(f.f_crime_basis==='profile') P.push(['5(1)(d)','It predicts criminal behavior from profiling or personality traits alone.']);
+    else H.push(['Annex III §6','It supports risk assessments related to criminal offenses.']);
+  }
+  const personal = s.data.some(d=>['personal','financial','sensitive','children'].includes(d));
+  const consequential = !!(DOMAINS[s.domain].eu || DOMAINS[s.domain].co);
+  if(s.decision==='auto' && s.oversight==='none' && (consequential || personal))
+    R.push({id:'admt',text:'Makes automated decisions about people with no human review. That triggers GDPR Art. 22 rights, California’s automated decision-making (ADMT) rules and Colorado AI Act duties, and is hard to defend if a decision is challenged.'});
+  if((s.source==='api'||s.source==='vendor') && s.training!=='no' && (s.data.includes('sensitive')||s.data.includes('children')))
+    R.push({id:'vendor',text:'Sends sensitive or children’s data to a vendor that '+(s.training==='yes'?'can':'may be able to')+' train its models on it.'});
+  if(s.profiling && s.oversight==='none' && (s.people.includes('vulnerable')||s.data.includes('children')))
+    R.push({id:'vuln',text:'Profiles vulnerable people or children with no human oversight.'});
+  return {P,H,open,R};
+}
+
 function classify(s){
   const d = DOMAINS[s.domain];
-  if(s.prohibited.length){
-    return {cls:'prohibited',floor:5,title:'Prohibited practice',ref:'Art. 5',
-      reasons:s.prohibited.map(p=>PROHIBITED.find(x=>x[0]===p)[1]+' (Art. '+PROHIBITED.find(x=>x[0]===p)[2]+').'),
+  const {P,H,open} = screen(s);
+  if(P.length){
+    return {cls:'prohibited',floor:5,title:'Likely prohibited practice',ref:'Art. '+P.map(p=>p[0]).join(', '),
+      reasons:P.map(p=>p[1]+' (Art. '+p[0]+')'),
+      date:'Prohibitions have applied since 2 Feb 2025. Confirm with Legal; a few narrow exceptions exist.'};
+  }
+  if(open.length){
+    return {cls:'review',floor:4,title:'Possible prohibited practice',ref:'Art. 5',
+      reasons:['Section 02 needs an answer on '+open.join('; ')+'.','Until it’s answered, the use case is treated as Critical.'],
       date:'Prohibitions have applied since 2 Feb 2025.'};
   }
   if(d.annex1){
@@ -461,7 +532,13 @@ function classify(s){
     if(s.profiling) r.push('It profiles individuals, so the Art. 6(3) exception isn’t available.');
     else if(s.narrow) r.push('Narrow-task exception noted but not applied. Recheck the answers.');
     else r.push('No Art. 6(3) exception claimed.');
+    H.forEach(h=>r.push(h[1]+' ('+h[0]+').'));
     return {cls:'high',floor:3,title:'High-risk AI system',ref:'Art. 6(2) · '+d.eu,reasons:r,
+      date:'Annex III obligations apply from 2 Dec 2027 (deferred by the Digital AI Omnibus).'};
+  }
+  if(H.length){
+    return {cls:'high',floor:3,title:'High-risk AI system',ref:'Art. 6(2) \u00b7 '+H.map(h=>h[0]).join(', '),
+      reasons:H.map(h=>h[1]+' ('+h[0]+').'),
       date:'Annex III obligations apply from 2 Dec 2027 (deferred by the Digital AI Omnibus).'};
   }
   if(s.interacts||s.generates){
@@ -496,6 +573,8 @@ function controls(s,t,reg){
     if(vendor) add('AI-04','Notify Procurement and TPRM so the vendor isn’t onboarded for this purpose.','GOVERN');
     return L;
   }
+  const RF = screen(s).R.map(r=>r.id);
+  if(reg.cls==='review') add('AI-00','Answer the open capability questions in section 02 and get a Legal read before going further.','GOVERN \u00b7 Art. 5',true);
   add('AI-01','Register the use case in the AI inventory with model, vendor and data details.','GOVERN');
   add('AI-02','Name an accountable business owner and a technical owner.','GOVERN');
   add('AI-03','Confirm the use fits the AI acceptable-use policy.','GOVERN');
@@ -510,6 +589,8 @@ function controls(s,t,reg){
     add('AI-11','Monitor outputs and drift after launch, with a named reviewer and thresholds.','MANAGE');
   }
   if(t>=2 && s.oversight!=='every') add('AI-12','Define the human oversight procedure: who can override, when, and how it’s logged.','MANAGE · Art. 14');
+  if(RF.includes('admt')) add('AI-21','Put a human review step before decisions take effect, and give people a way to contest them.','MANAGE \u00b7 GDPR Art. 22');
+  if(RF.includes('vendor')) add('AI-22','Stop sending sensitive data until the vendor contract bars training on it, or remove that data from the workflow.','GOVERN \u00b7 TPRM',true);
   if(t>=3 || s.profiling || DOMAINS[s.domain].co) add('AI-13','Test for bias and disparate impact across protected groups.','MEASURE');
   if(t>=3){
     add('AI-14','Complete an AI impact assessment (a FRIA where Art. 27 applies).','MAP · Art. 27');
@@ -540,14 +621,15 @@ function flags(s){
 
 /* ---------- Render result ---------- */
 const TIER_ICON = {1:'shield',2:'alert',3:'alert',4:'alert',5:'ban'};
-const REG_COLOR = {prohibited:'--crit',high:'--high',exception:'--mod',limited:'--mod',minimal:'--low'};
+const REG_COLOR = {review:'--crit',prohibited:'--crit',high:'--high',exception:'--mod',limited:'--mod',minimal:'--low'};
 const FN_CLASS = {GOVERN:'gov',MAP:'map',MEASURE:'meas',MANAGE:'man'};
 const CIRC = 2*Math.PI*40;
 
 function evaluate(s){
-  const sc = score(s), reg = classify(s), b = band(sc.value);
-  const t = reg.floor===5 ? 5 : Math.max(b, reg.floor);
-  return {sc, reg, b, t};
+  const sc = score(s), reg = classify(s), b = band(sc.value), rf = screen(s).R;
+  const t = reg.floor===5 ? 5 : Math.max(b, reg.floor, rf.length?3:0);
+  const raisedBy = t===b||t===5 ? '' : (reg.floor>=t ? 'the EU AI Act classification' : 'red flags');
+  return {sc, reg, b, t, rf, raisedBy};
 }
 function tagsHtml(tag){
   return tag.split(' · ').map(p=>`<span class="tag ${FN_CLASS[p]||''}">${esc(p)}</span>`).join('');
@@ -557,7 +639,7 @@ let summaryText='';
 function update(){
   const s = read();
   $('#training-wrap').classList.toggle('hidden', !(s.source==='api'||s.source==='vendor'));
-  const {sc, reg, b, t} = evaluate(s);
+  const {sc, reg, b, t, rf, raisedBy} = evaluate(s);
   const T = TIERS[t];
   const ctrls = controls(s,t,reg), fl = flags(s);
   const id = assessId(s.name);
@@ -582,8 +664,9 @@ function update(){
       </div>
       <div class="bands" aria-hidden="true">${[['--low',1],['--mod',2],['--high',3],['--crit',4]].map(([c,n])=>`<span style="--b:var(${c})" class="${n<=Math.min(t,4)?'on':''}"></span>`).join('')}</div>
       <div class="bands-l"><span>Low</span><span>Moderate</span><span>High</span><span>Critical</span></div>
-      ${t!==b && t!==5?`<div class="raised">${ic('up')}Raised from ${TIERS[b].name} by the EU AI Act classification</div>`:''}
+      ${raisedBy?`<div class="raised">${ic('up')}Raised from ${TIERS[b].name} by ${raisedBy}</div>`:''}
     </div>
+    ${rf.length?`<div class="block"><h3>${ic('alert')}Red flags<span class="n">${rf.length}</span></h3><div class="flagbox"><ul>${rf.map(r=>`<li>${esc(r.text)}</li>`).join('')}</ul></div></div>`:''}
     <div class="block">
       <h3>${ic('law')}EU AI Act classification</h3>
       <div class="reg" style="--rc:var(${REG_COLOR[reg.cls]})">
@@ -620,6 +703,7 @@ function update(){
     s.desc?`Description: ${s.desc}`:'',
     ``,
     `Risk tier: ${T.name}   Inherent risk score: ${sc.value}/100`,
+    ...(rf.length?['Red flags:',...rf.map(r=>`  ! ${r.text}`)]:[]),
     `EU AI Act: ${reg.title} (${reg.ref})`,
     ...reg.reasons.map(r=>`  - ${r}`),
     `  ${reg.date}`,
@@ -637,6 +721,7 @@ function update(){
     try{ await navigator.clipboard.writeText(summaryText); $('#copied').textContent='Copied to clipboard.'; }
     catch(e){ $('#copied').textContent='Copy was blocked by the browser. Select and copy from the panel instead.'; }
   });
+  CAPS.forEach(c=>{ if(c.follow) $('#fw-'+c.id).classList.toggle('hidden', !s.caps.includes(c.id)); });
   stepper(s);
   suggest(s);
 }
@@ -645,7 +730,7 @@ function update(){
 function stepper(s){
   const done = {
     1: !!(s.name && s.desc && s.role && s.deploy),
-    2: true,
+    2: screen(s).open.length===0,
     3: !!(s.domain && s.decision),
     4: s.data.length>0 && s.people.length>0 && !!s.scale && !!s.reversibility,
     5: !!(s.source && s.oversight)
@@ -653,7 +738,7 @@ function stepper(s){
   let n=0;
   for(let i=1;i<=5;i++){
     const el=$('#st-'+i), dot=el.querySelector('.dot');
-    const warn = i===2 && s.prohibited.length>0;
+    const warn = i===2 && screen(s).P.length>0;
     el.classList.toggle('done', done[i] && !warn);
     el.classList.toggle('warn', warn);
     dot.innerHTML = warn ? '!' : done[i] ? ic('check') : String(i);
@@ -706,14 +791,14 @@ function suggest(s){
     pending=hit[1];
     $('#suggest-text').textContent='The description sounds like: '+DOMAINS[hit[1]].label+'.';
     box.classList.add('show');
-  } else if(/emotion|mood|stress|frustrat|sentiment of (agents|employees|students)/i.test(s.desc) && !s.prohibited.includes('p_emotion') && ['employment','education'].includes(s.domain)){
+  } else if(/emotion|mood|stress|frustrat|sentiment of (agents|employees|students)/i.test(s.desc) && !s.caps.includes('c_emotion')){
     pending='emotion';
-    $('#suggest-text').textContent='Inferring emotions at work or in school is prohibited under Art. 5(1)(f). Check section 02.';
+    $('#suggest-text').textContent='Your description mentions emotions or stress. Answer the emotion question in section 02.';
     box.classList.add('show');
   } else box.classList.remove('show');
 }
 $('#suggest-apply').addEventListener('click',()=>{
-  if(pending==='emotion') $('#p_emotion').checked=true;
+  if(pending==='emotion') $('#c_emotion').checked=true;
   else if(pending) $('#domain').value=pending;
   update();
 });

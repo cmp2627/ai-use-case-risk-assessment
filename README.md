@@ -20,14 +20,22 @@ AI governance platforms like OneTrust, LogicGate and ServiceNow give you an inta
 
 ## How the logic works
 
-### 1. Regulatory screen (EU AI Act), in order
-1. **Prohibited practices (Art. 5).** Any match stops the assessment.
+### 1. Capability screen: no self-incrimination required
+Nobody checks a box that says "uses manipulative techniques that cause significant harm." So the intake never asks whether a system is prohibited. It asks neutral questions about what the system *does* (detects emotions, identifies people from biometrics, tailors offers by financial situation, scores trustworthiness, predicts crime) with follow-ups that only appear when relevant (what it's for, who it's used on, how the output is used). The engine combines those answers with the rest of the intake to decide:
+
+- **Likely prohibited (Art. 5).** Example: emotion detection + used on employees + not for medical or safety reasons → Art. 5(1)(f).
+- **High-risk biometric use (Annex III §1).** Example: remote identification, emotion recognition outside work or school.
+- **Open question.** A checked capability with an unanswered follow-up holds the tier at Critical until it's answered.
+- **Red flags** that aren't Art. 5 but raise the tier to at least High. Example: automated decisions about people with no human review (GDPR Art. 22, California ADMT rules, Colorado AI Act), or sensitive data sent to a vendor that may train on it.
+
+### 2. Regulatory classification (EU AI Act), in order
+1. **Prohibited practices (Art. 5),** derived from the capability screen. Any match stops the assessment.
 2. **High-risk (Art. 6).** Safety components of regulated products (Annex I), or use in a listed area such as employment, education, credit, insurance, essential services, biometrics, critical infrastructure or law enforcement (Annex III).
 3. **Art. 6(3) exception.** An Annex III use can avoid high-risk status if it only performs a narrow procedural or preparatory task. The exception is blocked whenever the system profiles individuals.
 4. **Transparency (Art. 50).** Chatbots people interact with directly, and AI-generated content shared externally.
 5. Otherwise **minimal risk**.
 
-### 2. Inherent risk score
+### 3. Inherent risk score
 Ten factors, normalized to 0–100:
 
 | Factor | Max points | NIST AI RMF |
@@ -45,19 +53,20 @@ Ten factors, normalized to 0–100:
 
 Score bands: **Low** < 25 · **Moderate** 25–49 · **High** 50–74 · **Critical** ≥ 75.
 
-### 3. Final tier: the law sets a floor
-The final tier is the higher of the score band and a regulatory floor:
+### 4. Final tier: the law sets a floor
+The final tier is the highest of the score band, the regulatory floor, and High if any red flag is present:
 
 | AI Act classification | Minimum tier |
 |---|---|
 | Prohibited | Prohibited (blocked) |
+| Possible prohibited (open follow-up) | Critical |
 | High-risk | High |
 | Limited risk / Art. 6(3) exception claimed | Moderate |
 | Minimal risk | Low |
 
 A use case can score low on the organization's own factors and still be High because the law says so. The panel says when that happens.
 
-### 4. Controls and governance
+### 5. Controls and governance
 Controls AI-01 to AI-20 are triggered by tier and by specific answers. Examples: a vendor assessment whenever a third-party model is used, a DPIA when personal data is involved, bias testing for profiling or consequential decisions, and separate provider (Art. 9–11, 43, 49) vs. deployer (Art. 26) obligations for high-risk systems.
 
 | Tier | Approval | Reassess |

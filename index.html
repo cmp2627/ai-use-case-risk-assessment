@@ -8,20 +8,16 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* Layout: intake register on the left, live determination panel pinned on the right. */
+/* Layout: app bar, then section navigator | intake form | live determination panel. */
 :root{
-  --bg:#f3f5f6;
-  --surface:#ffffff;
-  --ink:#151a1e;
-  --muted:#5a6570;
-  --line:#dce2e6;
-  --accent:#0b6b63;
-  --accent-soft:#e3f1ef;
-  --low:#2f7d4f; --low-bg:#e6f3eb;
-  --mod:#a8670f; --mod-bg:#fbf0dc;
-  --high:#c2410c; --high-bg:#fde9df;
-  --crit:#b3192a; --crit-bg:#fbe3e6;
-  --proh:#151a1e; --proh-bg:#e9eaec;
+  --bg:#eef2f1; --surface:#ffffff; --surface-2:#f5f8f7; --ink:#12201e; --muted:#5b6b69; --line:#d9e1e0;
+  --accent:#0d7a6f; --accent-strong:#0a5e56; --accent-soft:#e1f2ef;
+  --brand:#0f2d2a; --brand-ink:#e8f3f1; --brand-muted:#9fbdb8;
+  --low:#2f7d4f; --low-bg:#e6f3eb; --mod:#a8670f; --mod-bg:#fbf0dc;
+  --high:#c2410c; --high-bg:#fde9df; --crit:#b3192a; --crit-bg:#fbe3e6;
+  --proh:#12201e; --proh-bg:#e4e8e7;
+  --f-gov:#4d63b8; --f-map:#0d7a6f; --f-meas:#a8670f; --f-man:#8a4fb5;
+  --shadow:0 1px 2px rgba(16,40,36,.05),0 6px 20px rgba(16,40,36,.06);
   --display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
   --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
@@ -29,189 +25,275 @@
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#0e1214; --surface:#161c1f; --ink:#e6ebee; --muted:#97a3ac; --line:#29323a;
-    --accent:#4cb8ac; --accent-soft:#16302e;
-    --low:#5fbf86; --low-bg:#14291d; --mod:#e0a24a; --mod-bg:#2e2412;
-    --high:#f0844f; --high-bg:#33190e; --crit:#f2667a; --crit-bg:#341219;
-    --proh:#e6ebee; --proh-bg:#262d33;
+    --bg:#0b1110; --surface:#131b1a; --surface-2:#18221f; --ink:#e4ecea; --muted:#93a5a2; --line:#263331;
+    --accent:#4fc2b3; --accent-strong:#7dd6ca; --accent-soft:#15302c;
+    --brand:#08100f; --brand-ink:#e4ecea; --brand-muted:#7f9a96;
+    --low:#5fbf86; --low-bg:#14291d; --mod:#e0a24a; --mod-bg:#2e2412; --high:#f0844f; --high-bg:#33190e;
+    --crit:#f2667a; --crit-bg:#341219; --proh:#e4ecea; --proh-bg:#232d2b;
+    --f-gov:#8c9ee6; --f-map:#4fc2b3; --f-meas:#e0a24a; --f-man:#c49be6;
+    --shadow:0 1px 2px rgba(0,0,0,.3);
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0e1214; --surface:#161c1f; --ink:#e6ebee; --muted:#97a3ac; --line:#29323a;
-  --accent:#4cb8ac; --accent-soft:#16302e;
-  --low:#5fbf86; --low-bg:#14291d; --mod:#e0a24a; --mod-bg:#2e2412;
-  --high:#f0844f; --high-bg:#33190e; --crit:#f2667a; --crit-bg:#341219;
-  --proh:#e6ebee; --proh-bg:#262d33;
+  --bg:#0b1110; --surface:#131b1a; --surface-2:#18221f; --ink:#e4ecea; --muted:#93a5a2; --line:#263331;
+  --accent:#4fc2b3; --accent-strong:#7dd6ca; --accent-soft:#15302c;
+  --brand:#08100f; --brand-ink:#e4ecea; --brand-muted:#7f9a96;
+  --low:#5fbf86; --low-bg:#14291d; --mod:#e0a24a; --mod-bg:#2e2412; --high:#f0844f; --high-bg:#33190e;
+  --crit:#f2667a; --crit-bg:#341219; --proh:#e4ecea; --proh-bg:#232d2b;
+  --f-gov:#8c9ee6; --f-map:#4fc2b3; --f-meas:#e0a24a; --f-man:#c49be6;
+  --shadow:0 1px 2px rgba(0,0,0,.3);
   color-scheme:dark;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);-webkit-font-smoothing:antialiased}
-h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:.005em}
-.wrap{max-width:1260px;margin:0 auto;padding:28px 20px 48px}
-header.top{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-content:space-between;padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:24px}
-.kicker{font:500 12px/1 var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
-h1{font-size:34px;font-weight:700;line-height:1.1}
-.lede{color:var(--muted);max-width:62ch;margin:8px 0 0}
-.examples{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.examples span{font-size:13px;color:var(--muted);margin-right:2px}
-.chip{font:500 13px/1 var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 12px;border-radius:999px;cursor:pointer}
-.chip:hover{border-color:var(--accent)}
-.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
-.grid{display:grid;grid-template-columns:minmax(0,1fr) 450px;gap:24px;align-items:start}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* App bar */
+.appbar{background:var(--brand);color:var(--brand-ink)}
+.appbar-in{max-width:1440px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:var(--brand);display:grid;place-items:center}
+.logo svg.i{width:20px;height:20px;stroke-width:2.2}
+.appname{font:600 17px/1.2 var(--display);letter-spacing:.01em}
+.appname small{display:block;font:400 12px/1.3 var(--body);color:var(--brand-muted);letter-spacing:0}
+.fw{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.fw span{font:500 11.5px/1 var(--mono);border:1px solid color-mix(in srgb,var(--brand-ink) 22%,transparent);color:var(--brand-muted);padding:6px 9px;border-radius:999px}
+
+/* Intro + scenarios */
+.wrap{max-width:1440px;margin:0 auto;padding:24px 24px 48px}
+.intro{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin-bottom:24px}
+.intro h1{font-size:30px;font-weight:700;line-height:1.15}
+.intro p{color:var(--muted);max-width:70ch;margin:6px 0 0}
+.scen-label{font:500 12px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:4px 0 -6px}
+.scenarios{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+@media (max-width:900px){.scenarios{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.scen{display:grid;gap:6px;text-align:left;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;box-shadow:var(--shadow);transition:border-color .15s,transform .15s}
+.scen:hover{border-color:var(--accent);transform:translateY(-1px)}
+.scen[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft),var(--shadow)}
+.scen b{font-weight:600;font-size:14px}
+.scen span{font-size:12.5px;color:var(--muted);line-height:1.35}
+.pill{display:inline-flex;align-items:center;gap:6px;width:max-content;font:600 11px/1 var(--body);text-transform:uppercase;letter-spacing:.06em;padding:5px 8px;border-radius:999px;color:var(--c);background:var(--b)}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c)}
+
+/* Three-column grid */
+.grid{display:grid;grid-template-columns:200px minmax(0,1fr) 460px;gap:24px;align-items:start}
+@media (max-width:1240px){.grid{grid-template-columns:minmax(0,1fr) 440px}.stepper{display:none}}
 @media (max-width:960px){.grid{grid-template-columns:1fr}.result{order:-1;position:static!important;max-height:none!important}}
+
+/* Stepper */
+.stepper{position:sticky;top:16px;display:grid;gap:4px}
+.stepper .cap{font:500 11.5px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:0 10px 8px}
+.step{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;color:var(--ink);text-decoration:none;font-size:13.5px;font-weight:500}
+.step:hover{background:var(--surface)}
+.step .dot{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font:500 11px/1 var(--mono);color:var(--muted);background:var(--surface);flex:none}
+.step.done .dot{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.step.done .dot svg.i{width:13px;height:13px;stroke-width:3}
+.step.warn .dot{background:var(--crit);border-color:var(--crit);color:var(--surface)}
+.progress{margin:12px 10px 0;height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+.progress b{display:block;height:100%;background:var(--accent);transition:width .3s}
+.progress-l{font-size:12px;color:var(--muted);padding:6px 10px 0}
 
 /* Intake */
 form{display:grid;gap:16px}
-fieldset{margin:0;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:20px 20px 22px;display:grid;gap:18px;min-width:0}
+fieldset{margin:0;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:0;display:grid;min-width:0;box-shadow:var(--shadow);overflow:hidden}
 legend{display:contents}
-.sec-head{display:flex;gap:12px;align-items:baseline}
-.sec-num{font:500 12px/1 var(--mono);color:var(--accent);padding:4px 6px;border:1px solid var(--accent);border-radius:4px}
-.sec-head h2{font-size:20px;font-weight:600}
+.sec-head{display:flex;gap:14px;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.sec-ic{width:38px;height:38px;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.sec-ic.danger{background:var(--crit-bg);color:var(--crit)}
+.sec-ic svg.i{width:20px;height:20px}
+.sec-head h2{font-size:19px;font-weight:600;display:flex;gap:10px;align-items:baseline}
+.sec-head h2 em{font:500 12px/1 var(--mono);font-style:normal;color:var(--muted)}
 .sec-head p{margin:2px 0 0;color:var(--muted);font-size:13.5px}
+.sec-body{padding:20px;display:grid;gap:20px}
 .field{display:grid;gap:8px}
 .field > label,.q{font-weight:600;font-size:14px}
 .hint{color:var(--muted);font-size:13px;font-weight:400;margin-top:-4px}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 @media (max-width:560px){.row2{grid-template-columns:1fr}}
-input[type="text"],textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:10px 12px}
-textarea{min-height:84px;resize:vertical}
-input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible,.opt input:focus-visible + span{outline:2px solid var(--accent);outline-offset:2px}
+input[type="text"],textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;transition:border-color .15s,box-shadow .15s}
+input[type="text"]:hover,textarea:hover,select:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+input[type="text"]:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+textarea{min-height:88px;resize:vertical}
+button:focus-visible,.opt input:focus-visible + span,.check input:focus-visible,.step:focus-visible,.scen:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .seg{display:flex;flex-wrap:wrap;gap:8px}
 .opt{position:relative;display:flex}
 .opt input{position:absolute;opacity:0;width:1px;height:1px}
-.opt span{display:block;border:1px solid var(--line);background:var(--bg);border-radius:7px;padding:8px 12px;font-size:13.5px;cursor:pointer;line-height:1.35}
-.opt input:checked + span{border-color:var(--accent);background:var(--accent-soft);color:var(--ink);box-shadow:inset 0 0 0 1px var(--accent)}
+.opt span{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-size:13.5px;cursor:pointer;line-height:1.35;transition:border-color .15s,background .15s}
+.opt span:hover{border-color:color-mix(in srgb,var(--accent) 50%,var(--line))}
+.opt input:checked + span{border-color:var(--accent);background:var(--accent);color:var(--surface);font-weight:500}
+.opt input:checked + span::before{content:"";width:12px;height:12px;flex:none;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/contain no-repeat}
 .checks{display:grid;gap:8px}
-.check{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1px solid var(--line);border-radius:7px;background:var(--bg);cursor:pointer;font-size:13.5px}
-.check input{margin:2px 0 0;accent-color:var(--accent);width:16px;height:16px;flex:none}
+.check{display:flex;gap:12px;align-items:flex-start;padding:11px 14px;border:1px solid var(--line);border-radius:9px;background:var(--surface);cursor:pointer;font-size:13.5px;transition:border-color .15s,background .15s}
+.check:hover{border-color:color-mix(in srgb,var(--accent) 50%,var(--line))}
+.check input{margin:1px 0 0;accent-color:var(--accent);width:17px;height:17px;flex:none}
 .check:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.check.danger input{accent-color:var(--crit)}
 .check.danger:has(input:checked){border-color:var(--crit);background:var(--crit-bg)}
-.check .ref{margin-left:auto;font:400 11.5px/1.6 var(--mono);color:var(--muted);white-space:nowrap;padding-left:8px}
-.suggest{display:none;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;background:var(--accent-soft);border-radius:7px;padding:8px 12px}
+.check .ref{margin-left:auto;font:500 11px/1 var(--mono);color:var(--muted);white-space:nowrap;padding:4px 7px;border-radius:5px;background:var(--surface-2);border:1px solid var(--line)}
+.suggest{display:none;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:8px;padding:9px 12px}
 .suggest.show{display:flex}
-.suggest button{font:600 12.5px/1 var(--body);border:0;background:var(--accent);color:var(--surface);padding:7px 10px;border-radius:5px;cursor:pointer}
+.suggest svg.i{color:var(--accent)}
+.suggest button{margin-left:auto;font:600 12.5px/1 var(--body);border:0;background:var(--accent);color:var(--surface);padding:7px 12px;border-radius:6px;cursor:pointer}
 .hidden{display:none!important}
 
 /* Result panel */
-.result{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
-.res-head{padding:20px 22px 18px;border-bottom:1px solid var(--line);border-top:6px solid var(--tier-c,var(--accent));border-radius:10px 10px 0 0}
+.result{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.res-head{padding:18px 22px 20px;background:var(--tier-bg);border-bottom:1px solid var(--line)}
 .meta{display:flex;justify-content:space-between;gap:12px;font:400 12px/1.4 var(--mono);color:var(--muted)}
-.uc-name{font-size:22px;font-weight:600;margin:10px 0 14px}
-.verdict{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.tier{font:700 15px/1 var(--display);text-transform:uppercase;letter-spacing:.06em;padding:9px 14px;border-radius:6px;color:var(--tier-c);background:var(--tier-bg);border:1px solid var(--tier-c)}
-.score{font:600 28px/1 var(--display);font-variant-numeric:tabular-nums}
-.score small{font:400 13px var(--body);color:var(--muted)}
-.raised{font-size:12.5px;color:var(--muted);margin-top:10px}
-.gauge{position:relative;height:10px;border-radius:5px;margin:16px 0 4px;background:linear-gradient(90deg,var(--low) 0 25%,var(--mod) 25% 50%,var(--high) 50% 75%,var(--crit) 75% 100%);opacity:.85}
-.gauge i{position:absolute;top:-5px;width:4px;height:20px;border-radius:2px;background:var(--ink);box-shadow:0 0 0 2px var(--surface);transform:translateX(-2px);transition:left .25s}
-.gauge-l{display:flex;justify-content:space-between;font:400 11px/1 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
-@media (prefers-reduced-motion:reduce){.gauge i{transition:none}}
-.block{padding:18px 22px;border-bottom:1px solid var(--line);display:grid;gap:10px}
+.uc-name{font-size:21px;font-weight:600;margin:8px 0 14px;line-height:1.2}
+.verdict{display:flex;align-items:center;gap:18px}
+.ring{position:relative;width:96px;height:96px;flex:none}
+.ring svg{width:96px;height:96px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:9}
+.ring .trk{stroke:color-mix(in srgb,var(--tier-c) 16%,var(--surface))}
+.ring .val{stroke:var(--tier-c);stroke-linecap:round;transition:stroke-dashoffset .4s}
+.ring div{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring strong{font:700 28px/1 var(--display);font-variant-numeric:tabular-nums;color:var(--ink)}
+.ring small{font:400 11px/1.4 var(--mono);color:var(--muted)}
+.tierbox{display:grid;gap:6px}
+.tierbox .lbl{font:500 11.5px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.tierbox .tier{font:700 26px/1 var(--display);color:var(--tier-c);display:flex;align-items:center;gap:8px}
+.tierbox .tier svg.i{width:22px;height:22px;stroke-width:2.2}
+.tierbox .sub{font-size:12.5px;color:var(--muted)}
+.raised{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;margin-top:12px;padding:5px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line);color:var(--ink)}
+.raised svg.i{width:14px;height:14px;color:var(--tier-c)}
+.bands{display:flex;gap:4px;margin-top:14px}
+.bands span{flex:1;height:5px;border-radius:3px;background:var(--b);opacity:.35}
+.bands span.on{opacity:1}
+.bands-l{display:flex;justify-content:space-between;font:400 11px/1 var(--mono);color:var(--muted);margin-top:6px}
+.block{padding:18px 22px;border-bottom:1px solid var(--line);display:grid;gap:12px}
 .block:last-child{border-bottom:0}
-.block h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
-.reg{display:grid;gap:6px}
-.reg-title{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-weight:600;font-size:16px}
-.reg-title code{font:500 12px var(--mono);color:var(--accent);white-space:nowrap}
+.block h3{display:flex;align-items:center;gap:8px;font:600 12px/1 var(--body);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.block h3 svg.i{width:16px;height:16px;color:var(--accent)}
+.block h3 .n{margin-left:auto;font:500 11.5px/1 var(--mono);background:var(--surface-2);border:1px solid var(--line);padding:4px 7px;border-radius:999px;letter-spacing:0;color:var(--ink)}
+.reg{display:grid;gap:8px;padding:14px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);border-left:4px solid var(--rc)}
+.reg-title{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-weight:600;font-size:15.5px}
+.reg-title code{font:500 11.5px var(--mono);color:var(--rc);white-space:nowrap}
 .reg ul,.flags ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:13.5px}
 .date{font-size:12.5px;color:var(--muted)}
-.drivers{display:grid;gap:8px}
-.drv{display:grid;grid-template-columns:1fr 46px;gap:4px 10px;font-size:13px;align-items:center}
-.drv .bar{grid-column:1/-1;height:6px;border-radius:3px;background:var(--bg);overflow:hidden}
-.drv .bar b{display:block;height:100%;background:var(--tier-c,var(--accent));border-radius:3px}
-.drv .pts{font:500 12px var(--mono);text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
-.controls{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.controls li{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:13.5px;padding:9px 10px;border-radius:6px;background:var(--bg)}
-.controls .cid{font:500 11.5px/1.7 var(--mono);color:var(--accent)}
-.controls .ctag{grid-column:2;font:400 11.5px var(--mono);color:var(--muted)}
-.controls li.stop{background:var(--crit-bg)}
-.controls li.stop .cid{color:var(--crit)}
-.kv{display:grid;grid-template-columns:110px 1fr;gap:8px 12px;font-size:13.5px}
+.drivers{display:grid;gap:10px}
+.drv{display:grid;grid-template-columns:1fr auto;gap:5px 10px;font-size:13px;align-items:center}
+.drv .bar{grid-column:1/-1;height:7px;border-radius:4px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
+.drv .bar b{display:block;height:100%;background:var(--tier-c);border-radius:4px}
+.drv .pts{font:500 12px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.controls{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.controls li{display:grid;grid-template-columns:18px auto 1fr;gap:3px 10px;align-items:start;font-size:13.5px;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface)}
+.controls .box{width:16px;height:16px;border:1.5px solid var(--muted);border-radius:4px;margin-top:2px}
+.controls .cid{font:500 11.5px/1.75 var(--mono);color:var(--muted)}
+.controls .tags{grid-column:3;display:flex;gap:5px;flex-wrap:wrap;margin-top:3px}
+.tag{font:500 10.5px/1 var(--mono);padding:4px 6px;border-radius:4px;color:var(--fc,var(--muted));background:color-mix(in srgb,var(--fc,var(--muted)) 12%,transparent)}
+.tag.gov{--fc:var(--f-gov)} .tag.map{--fc:var(--f-map)} .tag.meas{--fc:var(--f-meas)} .tag.man{--fc:var(--f-man)}
+.controls li.stop{border-color:var(--crit);background:var(--crit-bg)}
+.controls li.stop .box{border-color:var(--crit)}
+.flags li::marker{color:var(--mod)}
+.kv{display:grid;grid-template-columns:96px 1fr;gap:10px 12px;font-size:13.5px;margin:0}
 .kv dt{color:var(--muted)}
 .kv dd{margin:0}
 .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.btn{font:600 13.5px/1 var(--body);padding:10px 14px;border-radius:7px;border:1px solid var(--accent);background:var(--accent);color:var(--surface);cursor:pointer}
-.btn.ghost{background:transparent;color:var(--accent)}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 13.5px/1 var(--body);padding:11px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:var(--surface);cursor:pointer;transition:background .15s}
+.btn:hover{background:var(--accent-strong);border-color:var(--accent-strong)}
+.btn svg.i{width:16px;height:16px}
 .copied{font-size:12.5px;color:var(--low)}
-.fine{font-size:12px;color:var(--muted);line-height:1.5}
+.fine{font-size:12px;color:var(--muted);line-height:1.5;margin:0}
 footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;font-size:12.5px;color:var(--muted)}
 </style>
 </head>
 <body>
+<div class="appbar"><div class="appbar-in">
+  <div class="logo" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></div>
+  <div class="appname">AI Use Case Risk Assessment<small>Intake &amp; risk tiering</small></div>
+  <div class="fw" aria-label="Frameworks covered"><span>EU AI Act</span><span>NIST AI RMF</span><span>GDPR</span><span>US state laws</span></div>
+</div></div>
+
 <div class="wrap">
-  <header class="top">
+  <section class="intro">
     <div>
-      <div class="kicker">AI governance · Intake &amp; risk tiering</div>
-      <h1>AI Use Case Risk Assessment</h1>
-      <p class="lede">Describe an AI use case and answer the intake questions. The tool screens it against the EU AI Act, scores inherent risk on NIST AI RMF factors, and tells you the controls and approvals it needs before launch.</p>
+      <h1>Is this AI use case safe to launch?</h1>
+      <p>Describe how you want to use AI and answer five short sections. You'll get the EU AI Act classification, an inherent risk score, the controls required before launch, and who needs to approve it.</p>
     </div>
-    <div class="examples" role="group" aria-label="Load an example use case">
-      <span>Examples:</span>
-      <button type="button" class="chip" data-ex="resume">Résumé screener</button>
-      <button type="button" class="chip" data-ex="chatbot">Support chatbot</button>
-      <button type="button" class="chip" data-ex="code">Coding assistant</button>
-      <button type="button" class="chip" data-ex="emotion">Agent mood monitor</button>
-      <button type="button" class="chip" data-ex="blank">Start blank</button>
-    </div>
-  </header>
+    <div class="scen-label">Try a scenario</div>
+    <div class="scenarios" id="scenarios" role="group" aria-label="Load an example use case"></div>
+  </section>
 
   <div class="grid">
+    <nav class="stepper" aria-label="Assessment sections">
+      <div class="cap">Sections</div>
+      <a class="step" href="#sec-1" id="st-1"><span class="dot">1</span>The use case</a>
+      <a class="step" href="#sec-2" id="st-2"><span class="dot">2</span>Prohibited screen</a>
+      <a class="step" href="#sec-3" id="st-3"><span class="dot">3</span>Decisions &amp; domain</a>
+      <a class="step" href="#sec-4" id="st-4"><span class="dot">4</span>People &amp; data</a>
+      <a class="step" href="#sec-5" id="st-5"><span class="dot">5</span>Model &amp; oversight</a>
+      <div class="progress"><b id="prog"></b></div>
+      <div class="progress-l" id="prog-l"></div>
+    </nav>
+
     <form id="intake" novalidate>
-      <fieldset>
-        <legend><div class="sec-head"><span class="sec-num">01</span><div><h2>The use case</h2><p>What it is, who owns it, and where it runs.</p></div></div></legend>
-        <div class="row2">
-          <div class="field"><label for="name">Use case name</label><input type="text" id="name" autocomplete="off"></div>
-          <div class="field"><label for="owner">Business owner</label><input type="text" id="owner" autocomplete="off" placeholder="Team or person accountable"></div>
-        </div>
-        <div class="field">
-          <label for="desc">What does it do?</label>
-          <div class="hint">Plain language: the input, what the AI produces, and what people do with it.</div>
-          <textarea id="desc"></textarea>
-          <div class="suggest" id="suggest" aria-live="polite"><span id="suggest-text"></span><button type="button" id="suggest-apply">Apply</button></div>
-        </div>
-        <div class="row2">
-          <div class="field"><div class="q" id="q-role">Your role</div><div class="seg" data-radio="role" aria-labelledby="q-role"></div></div>
-          <div class="field"><div class="q" id="q-deploy">Who uses it</div><div class="seg" data-radio="deploy" aria-labelledby="q-deploy"></div></div>
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend><div class="sec-head"><span class="sec-num">02</span><div><h2>Prohibited practice screen</h2><p>EU AI Act Art. 5. Check anything the system does, even partly.</p></div></div></legend>
-        <div class="checks" data-checks="prohibited" data-danger="1"></div>
-      </fieldset>
-
-      <fieldset>
-        <legend><div class="sec-head"><span class="sec-num">03</span><div><h2>Decisions and domain</h2><p>High-risk status depends on where the output lands.</p></div></div></legend>
-        <div class="field">
-          <label for="domain">Area the output is used in</label>
-          <select id="domain"></select>
-        </div>
-        <div class="field"><div class="q" id="q-decision">How much does the AI drive the outcome?</div><div class="seg" data-radio="decision" aria-labelledby="q-decision"></div></div>
-        <div class="checks">
-          <label class="check"><input type="checkbox" id="profiling"><span>It evaluates or profiles individuals: scores, ranks, or predicts their behavior, performance, reliability or preferences.</span><span class="ref">Art. 6(3)</span></label>
-          <label class="check" id="narrow-wrap"><input type="checkbox" id="narrow"><span>It only does a narrow procedural or preparatory task (e.g., formats files, flags duplicates) and doesn't materially influence the decision.</span><span class="ref">Art. 6(3)</span></label>
+      <fieldset id="sec-1">
+        <legend><div class="sec-head"><span class="sec-ic"><svg class="i" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span><div><h2>The use case <em>01</em></h2><p>What it is, who owns it, and where it runs.</p></div></div></legend>
+        <div class="sec-body">
+          <div class="row2">
+            <div class="field"><label for="name">Use case name</label><input type="text" id="name" autocomplete="off"></div>
+            <div class="field"><label for="owner">Business owner</label><input type="text" id="owner" autocomplete="off" placeholder="Team or person accountable"></div>
+          </div>
+          <div class="field">
+            <label for="desc">What does it do?</label>
+            <div class="hint">Plain language: the input, what the AI produces, and what people do with it.</div>
+            <textarea id="desc"></textarea>
+            <div class="suggest" id="suggest" aria-live="polite"><svg class="i" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg><span id="suggest-text"></span><button type="button" id="suggest-apply">Apply</button></div>
+          </div>
+          <div class="row2">
+            <div class="field"><div class="q" id="q-role">Your role</div><div class="seg" data-radio="role" aria-labelledby="q-role"></div></div>
+            <div class="field"><div class="q" id="q-deploy">Who uses it</div><div class="seg" data-radio="deploy" aria-labelledby="q-deploy"></div></div>
+          </div>
         </div>
       </fieldset>
 
-      <fieldset>
-        <legend><div class="sec-head"><span class="sec-num">04</span><div><h2>People and data</h2><p>Who is affected, how many, and what data it touches.</p></div></div></legend>
-        <div class="field"><div class="q" id="q-data">Data it processes</div><div class="seg" data-multi="data" aria-labelledby="q-data"></div></div>
-        <div class="field"><div class="q" id="q-people">People affected by the output</div><div class="seg" data-multi="people" aria-labelledby="q-people"></div></div>
-        <div class="row2">
-          <div class="field"><div class="q" id="q-scale">People affected per year</div><div class="seg" data-radio="scale" aria-labelledby="q-scale"></div></div>
-          <div class="field"><div class="q" id="q-rev">If the output is wrong, the harm is</div><div class="seg" data-radio="reversibility" aria-labelledby="q-rev"></div></div>
+      <fieldset id="sec-2">
+        <legend><div class="sec-head"><span class="sec-ic danger"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg></span><div><h2>Prohibited practice screen <em>02</em></h2><p>EU AI Act Art. 5. Check anything the system does, even partly.</p></div></div></legend>
+        <div class="sec-body"><div class="checks" data-checks="prohibited"></div></div>
+      </fieldset>
+
+      <fieldset id="sec-3">
+        <legend><div class="sec-head"><span class="sec-ic"><svg class="i" viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M7 7l-3 6a3 3 0 0 0 6 0zM17 7l-3 6a3 3 0 0 0 6 0zM8 21h8"/></svg></span><div><h2>Decisions and domain <em>03</em></h2><p>High-risk status depends on where the output lands.</p></div></div></legend>
+        <div class="sec-body">
+          <div class="field">
+            <label for="domain">Area the output is used in</label>
+            <select id="domain"></select>
+          </div>
+          <div class="field"><div class="q" id="q-decision">How much does the AI drive the outcome?</div><div class="seg" data-radio="decision" aria-labelledby="q-decision"></div></div>
+          <div class="checks">
+            <label class="check"><input type="checkbox" id="profiling"><span>It evaluates or profiles individuals: scores, ranks, or predicts their behavior, performance, reliability or preferences.</span><span class="ref">Art. 6(3)</span></label>
+            <label class="check" id="narrow-wrap"><input type="checkbox" id="narrow"><span>It only does a narrow procedural or preparatory task (e.g., formats files, flags duplicates) and doesn't materially influence the decision.</span><span class="ref">Art. 6(3)</span></label>
+          </div>
         </div>
       </fieldset>
 
-      <fieldset>
-        <legend><div class="sec-head"><span class="sec-num">05</span><div><h2>Model, oversight and transparency</h2><p>Where the model comes from and how people stay in control.</p></div></div></legend>
-        <div class="field"><div class="q" id="q-source">Model source</div><div class="seg" data-radio="source" aria-labelledby="q-source"></div></div>
-        <div class="field" id="training-wrap"><div class="q" id="q-training">Can the vendor train on your data?</div><div class="seg" data-radio="training" aria-labelledby="q-training"></div></div>
-        <div class="field"><div class="q" id="q-oversight">Human oversight</div><div class="seg" data-radio="oversight" aria-labelledby="q-oversight"></div></div>
-        <div class="checks">
-          <label class="check"><input type="checkbox" id="interacts"><span>People interact with it directly (chat, voice agent) and may not realize it's AI.</span><span class="ref">Art. 50(1)</span></label>
-          <label class="check"><input type="checkbox" id="generates"><span>It generates text, images, audio or video that's published or shared outside the company.</span><span class="ref">Art. 50(2)–(4)</span></label>
+      <fieldset id="sec-4">
+        <legend><div class="sec-head"><span class="sec-ic"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg></span><div><h2>People and data <em>04</em></h2><p>Who is affected, how many, and what data it touches.</p></div></div></legend>
+        <div class="sec-body">
+          <div class="field"><div class="q" id="q-data">Data it processes</div><div class="hint">Select all that apply.</div><div class="seg" data-multi="data" aria-labelledby="q-data"></div></div>
+          <div class="field"><div class="q" id="q-people">People affected by the output</div><div class="hint">Select all that apply.</div><div class="seg" data-multi="people" aria-labelledby="q-people"></div></div>
+          <div class="row2">
+            <div class="field"><div class="q" id="q-scale">People affected per year</div><div class="seg" data-radio="scale" aria-labelledby="q-scale"></div></div>
+            <div class="field"><div class="q" id="q-rev">If the output is wrong, the harm is</div><div class="seg" data-radio="reversibility" aria-labelledby="q-rev"></div></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset id="sec-5">
+        <legend><div class="sec-head"><span class="sec-ic"><svg class="i" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg></span><div><h2>Model, oversight and transparency <em>05</em></h2><p>Where the model comes from and how people stay in control.</p></div></div></legend>
+        <div class="sec-body">
+          <div class="field"><div class="q" id="q-source">Model source</div><div class="seg" data-radio="source" aria-labelledby="q-source"></div></div>
+          <div class="field" id="training-wrap"><div class="q" id="q-training">Can the vendor train on your data?</div><div class="seg" data-radio="training" aria-labelledby="q-training"></div></div>
+          <div class="field"><div class="q" id="q-oversight">Human oversight</div><div class="seg" data-radio="oversight" aria-labelledby="q-oversight"></div></div>
+          <div class="checks">
+            <label class="check"><input type="checkbox" id="interacts"><span>People interact with it directly (chat, voice agent) and may not realize it's AI.</span><span class="ref">Art. 50(1)</span></label>
+            <label class="check"><input type="checkbox" id="generates"><span>It generates text, images, audio or video that's published or shared outside the company.</span><span class="ref">Art. 50(2)–(4)</span></label>
+          </div>
         </div>
       </fieldset>
     </form>
@@ -226,6 +308,7 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display
 </div>
 
 <script>
+
 const OPTS = {
   role:[['build','We build or train it'],['buy','We buy or use a vendor tool']],
   deploy:[['internal','Internal staff only'],['customer','Our customers'],['public','The general public']],
@@ -273,9 +356,26 @@ const EXAMPLES = {
   blank:{name:'',owner:'',desc:'',role:'buy',deploy:'internal',prohibited:[],domain:'none',decision:'info',profiling:false,narrow:false,data:[],people:[],scale:'small',reversibility:'easy',source:'api',training:'unknown',oversight:'every',interacts:false,generates:false}
 };
 
+
 /* ---------- Render form controls ---------- */
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* Lowercase only the first letter of sentence-case labels, so acronyms like HR and AI stay intact. */
+const lc = s => /^[A-Z][a-z]/.test(s) ? s[0].toLowerCase()+s.slice(1) : s;
+const ICON = {
+  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  shield:'<path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/>',
+  ban:'<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>',
+  alert:'<path d="M12 3.5l9.5 16.5h-19z"/><path d="M12 10v4.5M12 17.5v.01"/>',
+  up:'<path d="M12 19V5M6 11l6-6 6 6"/>',
+  law:'<path d="M3 10h18M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 21h18M12 3l9 5H3z"/>',
+  bars:'<path d="M4 20V11M10 20V5M16 20v-6M2 20h20"/>',
+  list:'<path d="M10 6h11M10 12h11M10 18h11M3 6l1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/>',
+  flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
+  route:'<circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H16a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h7.5"/>',
+  copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>'
+};
+const ic = n => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ICON[n]}</svg>`;
 document.querySelectorAll('[data-radio]').forEach(el=>{
   const n = el.dataset.radio; el.setAttribute('role','radiogroup');
   el.innerHTML = OPTS[n].map(([v,l])=>`<label class="opt"><input type="radio" name="${n}" id="${n}-${v}" value="${v}"><span>${esc(l)}</span></label>`).join('');
@@ -324,16 +424,16 @@ function score(s){
   const topData = s.data.slice().sort((a,b)=>(dm[b]||0)-(dm[a]||0))[0];
   const topPeople = s.people.slice().sort((a,b)=>(pm[b]||0)-(pm[a]||0))[0];
   const f = [
-    {label:'Decision impact: '+LABEL('decision',s.decision).toLowerCase(), pts:{info:0,support:10,auto:20}[s.decision]||0, max:20, fn:'MAP'},
-    {label:'Oversight: '+LABEL('oversight',s.oversight).toLowerCase(), pts:{every:0,spot:8,none:16}[s.oversight]||0, max:16, fn:'MANAGE'},
-    {label:'Data: '+(topData?LABEL('data',topData).toLowerCase():'none selected'), pts:pick(dm,s.data), max:18, fn:'MAP'},
-    {label:'Affected: '+(topPeople?LABEL('people',topPeople).toLowerCase():'none selected'), pts:pick(pm,s.people), max:14, fn:'MAP'},
-    {label:'Scale: '+LABEL('scale',s.scale).toLowerCase()+' people a year', pts:{small:2,mid:6,large:10}[s.scale]||0, max:10, fn:'MAP'},
-    {label:'Domain: '+DOMAINS[s.domain].label.toLowerCase(), pts:(DOMAINS[s.domain].eu||DOMAINS[s.domain].co)?12:0, max:12, fn:'MAP'},
+    {label:'Decision impact: '+lc(LABEL('decision',s.decision)), pts:{info:0,support:10,auto:20}[s.decision]||0, max:20, fn:'MAP'},
+    {label:'Oversight: '+lc(LABEL('oversight',s.oversight)), pts:{every:0,spot:8,none:16}[s.oversight]||0, max:16, fn:'MANAGE'},
+    {label:'Data: '+(topData?lc(LABEL('data',topData)):'none selected'), pts:pick(dm,s.data), max:18, fn:'MAP'},
+    {label:'Affected: '+(topPeople?lc(LABEL('people',topPeople)):'none selected'), pts:pick(pm,s.people), max:14, fn:'MAP'},
+    {label:'Scale: '+lc(LABEL('scale',s.scale))+' people a year', pts:{small:2,mid:6,large:10}[s.scale]||0, max:10, fn:'MAP'},
+    {label:'Domain: '+lc(DOMAINS[s.domain].label), pts:(DOMAINS[s.domain].eu||DOMAINS[s.domain].co)?12:0, max:12, fn:'MAP'},
     {label:'Profiles individuals', pts:s.profiling?8:0, max:8, fn:'MEASURE'},
-    {label:'Exposure: '+LABEL('deploy',s.deploy).toLowerCase(), pts:{internal:0,customer:5,public:8}[s.deploy]||0, max:8, fn:'GOVERN'},
-    {label:'Supply chain: '+LABEL('source',s.source).toLowerCase()+(vendor&&s.training!=='no'?' (training on your data '+(s.training==='yes'?'allowed':'unclear')+')':''), pts:({api:5,vendor:5,oss:4,inhouse:2}[s.source]||0)+(vendor?({yes:6,unknown:4}[s.training]||0):0), max:11, fn:'GOVERN'},
-    {label:'Harm if wrong: '+LABEL('reversibility',s.reversibility).toLowerCase(), pts:{easy:0,hard:6,irreversible:12}[s.reversibility]||0, max:12, fn:'MEASURE'}
+    {label:'Exposure: '+lc(LABEL('deploy',s.deploy)), pts:{internal:0,customer:5,public:8}[s.deploy]||0, max:8, fn:'GOVERN'},
+    {label:'Supply chain: '+lc(LABEL('source',s.source))+(vendor&&s.training!=='no'?' (training on your data '+(s.training==='yes'?'allowed':'unclear')+')':''), pts:({api:5,vendor:5,oss:4,inhouse:2}[s.source]||0)+(vendor?({yes:6,unknown:4}[s.training]||0):0), max:11, fn:'GOVERN'},
+    {label:'Harm if wrong: '+lc(LABEL('reversibility',s.reversibility)), pts:{easy:0,hard:6,irreversible:12}[s.reversibility]||0, max:12, fn:'MEASURE'}
   ];
   const raw = f.reduce((a,x)=>a+x.pts,0);
   return {factors:f, value:Math.round(raw/FACTOR_MAX*100)};
@@ -357,7 +457,7 @@ function classify(s){
         reasons:['Used in a listed high-risk area ('+d.eu+'), but you’ve stated it only performs a narrow procedural or preparatory task.','The exception holds only if it doesn’t materially influence the decision. Document the assessment before launch; a regulator can ask for it.'],
         date:'If the exception fails, Annex III obligations apply from 2 Dec 2027.'};
     }
-    const r = ['Output is used in a listed high-risk area: '+d.label.toLowerCase()+' ('+d.eu+').'];
+    const r = ['Output is used in a listed high-risk area: '+lc(d.label)+' ('+d.eu+').'];
     if(s.profiling) r.push('It profiles individuals, so the Art. 6(3) exception isn’t available.');
     else if(s.narrow) r.push('Narrow-task exception noted but not applied. Recheck the answers.');
     else r.push('No Art. 6(3) exception claimed.');
@@ -439,13 +539,25 @@ function flags(s){
 }
 
 /* ---------- Render result ---------- */
+const TIER_ICON = {1:'shield',2:'alert',3:'alert',4:'alert',5:'ban'};
+const REG_COLOR = {prohibited:'--crit',high:'--high',exception:'--mod',limited:'--mod',minimal:'--low'};
+const FN_CLASS = {GOVERN:'gov',MAP:'map',MEASURE:'meas',MANAGE:'man'};
+const CIRC = 2*Math.PI*40;
+
+function evaluate(s){
+  const sc = score(s), reg = classify(s), b = band(sc.value);
+  const t = reg.floor===5 ? 5 : Math.max(b, reg.floor);
+  return {sc, reg, b, t};
+}
+function tagsHtml(tag){
+  return tag.split(' · ').map(p=>`<span class="tag ${FN_CLASS[p]||''}">${esc(p)}</span>`).join('');
+}
+
 let summaryText='';
 function update(){
   const s = read();
   $('#training-wrap').classList.toggle('hidden', !(s.source==='api'||s.source==='vendor'));
-  const sc = score(s), reg = classify(s);
-  const b = band(sc.value);
-  const t = reg.floor===5 ? 5 : Math.max(b, reg.floor);
+  const {sc, reg, b, t} = evaluate(s);
   const T = TIERS[t];
   const ctrls = controls(s,t,reg), fl = flags(s);
   const id = assessId(s.name);
@@ -458,32 +570,39 @@ function update(){
       <div class="meta"><span>${id}</span><span>${new Date().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}</span></div>
       <h2 class="uc-name">${esc(s.name||'Untitled use case')}</h2>
       <div class="verdict">
-        <span class="tier">${T.name} risk</span>
-        <span class="score">${sc.value}<small> / 100 inherent risk score</small></span>
+        <div class="ring" role="img" aria-label="Inherent risk score ${sc.value} out of 100">
+          <svg viewBox="0 0 96 96"><circle class="trk" cx="48" cy="48" r="40"/><circle class="val" cx="48" cy="48" r="40" stroke-dasharray="${CIRC.toFixed(1)}" stroke-dashoffset="${(CIRC*(1-sc.value/100)).toFixed(1)}"/></svg>
+          <div><strong>${sc.value}</strong><small>of 100</small></div>
+        </div>
+        <div class="tierbox">
+          <span class="lbl">Risk tier</span>
+          <span class="tier">${ic(TIER_ICON[t])}${T.name}${t===5?'':' risk'}</span>
+          <span class="sub">Inherent risk score, NIST AI RMF factors</span>
+        </div>
       </div>
-      <div class="gauge" aria-hidden="true"><i style="left:${sc.value}%"></i></div>
-      <div class="gauge-l"><span>0 Low</span><span>25</span><span>50</span><span>75</span><span>Critical 100</span></div>
-      ${t!==b && t!==5?`<div class="raised">Raised from ${TIERS[b].name} by the regulatory classification below.</div>`:''}
+      <div class="bands" aria-hidden="true">${[['--low',1],['--mod',2],['--high',3],['--crit',4]].map(([c,n])=>`<span style="--b:var(${c})" class="${n<=Math.min(t,4)?'on':''}"></span>`).join('')}</div>
+      <div class="bands-l"><span>Low</span><span>Moderate</span><span>High</span><span>Critical</span></div>
+      ${t!==b && t!==5?`<div class="raised">${ic('up')}Raised from ${TIERS[b].name} by the EU AI Act classification</div>`:''}
     </div>
     <div class="block">
-      <h3>EU AI Act classification</h3>
-      <div class="reg">
+      <h3>${ic('law')}EU AI Act classification</h3>
+      <div class="reg" style="--rc:var(${REG_COLOR[reg.cls]})">
         <div class="reg-title"><span>${reg.title}</span><code>${esc(reg.ref)}</code></div>
         <ul>${reg.reasons.map(r=>`<li>${esc(r)}</li>`).join('')}</ul>
         <div class="date">${esc(reg.date)} Applies if the system is placed on the EU market or its output is used in the EU.</div>
       </div>
     </div>
     ${t===5?'':`<div class="block">
-      <h3>What drives the score</h3>
-      <div class="drivers">${drivers.length?drivers.map(d=>`<div class="drv"><span>${esc(d.label)}</span><span class="pts">+${Math.round(d.pts/FACTOR_MAX*100)}</span><span class="bar"><b style="width:${d.pts/d.max*100}%"></b></span></div>`).join(''):'<div class="fine">No risk factors selected yet.</div>'}</div>
+      <h3>${ic('bars')}What drives the score</h3>
+      <div class="drivers">${drivers.length?drivers.map(d=>`<div class="drv"><span>${esc(d.label)}</span><span class="pts">+${Math.round(d.pts/FACTOR_MAX*100)}</span><span class="bar"><b style="width:${d.pts/d.max*100}%"></b></span></div>`).join(''):'<p class="fine">No risk factors selected yet.</p>'}</div>
     </div>`}
     <div class="block">
-      <h3>Required before launch · ${ctrls.length}</h3>
-      <ul class="controls">${ctrls.map(c=>`<li class="${c.stop?'stop':''}"><span class="cid">${c.id}</span><span>${esc(c.text)}</span><span class="ctag">${esc(c.tag)}</span></li>`).join('')}</ul>
+      <h3>${ic('list')}Required before launch<span class="n">${ctrls.length}</span></h3>
+      <ul class="controls">${ctrls.map(c=>`<li class="${c.stop?'stop':''}"><span class="box" aria-hidden="true"></span><span class="cid">${c.id}</span><span>${esc(c.text)}</span><span class="tags">${tagsHtml(c.tag)}</span></li>`).join('')}</ul>
     </div>
-    ${fl.length?`<div class="block flags"><h3>Also check</h3><ul>${fl.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></div>`:''}
+    ${fl.length?`<div class="block flags"><h3>${ic('flag')}Also check<span class="n">${fl.length}</span></h3><ul>${fl.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></div>`:''}
     <div class="block">
-      <h3>Governance path</h3>
+      <h3>${ic('route')}Governance path</h3>
       <dl class="kv">
         <dt>Approval</dt><dd>${esc(T.approve)}</dd>
         <dt>Reassess</dt><dd>${esc(T.cadence)}</dd>
@@ -491,8 +610,8 @@ function update(){
       </dl>
     </div>
     <div class="block">
-      <div class="actions"><button type="button" class="btn" id="copy">Copy assessment summary</button><span class="copied" id="copied" aria-live="polite"></span></div>
-      <p class="fine">NIST AI RMF function tags (GOVERN, MAP, MEASURE, MANAGE) show where each control sits. Prohibited practices reflect Art. 5 as enacted; check the amended text for practices added in 2026.</p>
+      <div class="actions"><button type="button" class="btn" id="copy">${ic('copy')}Copy assessment summary</button><span class="copied" id="copied" aria-live="polite"></span></div>
+      <p class="fine">Tags show the NIST AI RMF function (GOVERN, MAP, MEASURE, MANAGE) and the legal reference for each control. Prohibited practices reflect Art. 5 as enacted; check the amended text for practices added in 2026.</p>
     </div>`;
   summaryText = [
     `AI USE CASE RISK ASSESSMENT  ${id}`,
@@ -518,8 +637,49 @@ function update(){
     try{ await navigator.clipboard.writeText(summaryText); $('#copied').textContent='Copied to clipboard.'; }
     catch(e){ $('#copied').textContent='Copy was blocked by the browser. Select and copy from the panel instead.'; }
   });
+  stepper(s);
   suggest(s);
 }
+
+/* ---------- Section navigator ---------- */
+function stepper(s){
+  const done = {
+    1: !!(s.name && s.desc && s.role && s.deploy),
+    2: true,
+    3: !!(s.domain && s.decision),
+    4: s.data.length>0 && s.people.length>0 && !!s.scale && !!s.reversibility,
+    5: !!(s.source && s.oversight)
+  };
+  let n=0;
+  for(let i=1;i<=5;i++){
+    const el=$('#st-'+i), dot=el.querySelector('.dot');
+    const warn = i===2 && s.prohibited.length>0;
+    el.classList.toggle('done', done[i] && !warn);
+    el.classList.toggle('warn', warn);
+    dot.innerHTML = warn ? '!' : done[i] ? ic('check') : String(i);
+    if(done[i]) n++;
+  }
+  $('#prog').style.width = (n/5*100)+'%';
+  $('#prog-l').textContent = n===5 ? 'All sections answered' : `${n} of 5 sections answered`;
+}
+
+/* ---------- Scenario cards ---------- */
+const SCEN_BLURB = {
+  resume:'Ranks job applicants for recruiters',
+  chatbot:'Answers customer billing questions',
+  code:'Suggests code in engineers’ IDEs',
+  emotion:'Reads agents’ stress from voice and video',
+  blank:'Assess your own use case'
+};
+$('#scenarios').innerHTML = Object.keys(EXAMPLES).map(k=>{
+  const ex = EXAMPLES[k];
+  let pill = '<span class="pill" style="--c:var(--muted);--b:var(--surface-2)">Blank form</span>';
+  if(k!=='blank'){
+    const T = TIERS[evaluate(ex).t];
+    pill = `<span class="pill" style="--c:var(${T.c});--b:var(${T.bg})">${T.name}</span>`;
+  }
+  return `<button type="button" class="scen" data-ex="${k}" aria-pressed="false"><b>${esc(ex.name||'Start blank')}</b><span>${esc(SCEN_BLURB[k])}</span>${pill}</button>`;
+}).join('');
 
 function assessId(name){
   let h=0; for(const ch of (name||'untitled')) h=(h*31+ch.charCodeAt(0))>>>0;

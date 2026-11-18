@@ -81,12 +81,10 @@ html{scroll-behavior:smooth;scroll-padding-top:16px}
 
 /* Three-column grid */
 .grid{display:grid;grid-template-columns:200px minmax(0,1fr) 460px;gap:24px;align-items:start}
-@media (max-width:1240px){.grid{grid-template-columns:minmax(0,1fr) 440px}.stepper{display:none}}
-@media (max-width:960px){.grid{grid-template-columns:1fr}.result{order:-1;position:static!important;max-height:none!important}}
 
 /* Stepper */
 .stepper{position:sticky;top:16px;display:grid;gap:4px}
-.stepper .cap{font:500 11.5px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:0 10px 8px}
+.stepper .step-cap{font:500 11.5px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:0 10px 8px}
 .step{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;color:var(--ink);text-decoration:none;font-size:13.5px;font-weight:500}
 .step:hover{background:var(--surface)}
 .step .dot{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font:500 11px/1 var(--mono);color:var(--muted);background:var(--surface);flex:none}
@@ -207,6 +205,11 @@ button:focus-visible,.opt input:focus-visible + span,.check input:focus-visible,
 .copied{font-size:12.5px;color:var(--low)}
 .fine{font-size:12px;color:var(--muted);line-height:1.5;margin:0}
 footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+
+/* Responsive rules last, so they win over the base component rules above. */
+@media (max-width:1240px){.grid{grid-template-columns:minmax(0,1fr) 420px}.stepper{display:none}}
+@media (max-width:960px){.grid{grid-template-columns:1fr}.result{order:-1;position:static;max-height:none;overflow:visible}}
+@media (max-height:640px){.result,.stepper{position:static;max-height:none;overflow:visible}}
 </style>
 </head>
 <body>
@@ -228,7 +231,7 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display
 
   <div class="grid">
     <nav class="stepper" aria-label="Assessment sections">
-      <div class="cap">Sections</div>
+      <div class="step-cap">Sections</div>
       <a class="step" href="#sec-1" id="st-1"><span class="dot">1</span>The use case</a>
       <a class="step" href="#sec-2" id="st-2"><span class="dot">2</span>Capabilities</a>
       <a class="step" href="#sec-3" id="st-3"><span class="dot">3</span>Decisions &amp; domain</a>

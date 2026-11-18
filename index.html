@@ -143,6 +143,9 @@ button:focus-visible,.opt input:focus-visible + span,.check input:focus-visible,
 .follow .q{font-size:13px}
 .flagbox{display:grid;gap:8px;padding:14px;border-radius:10px;background:var(--crit-bg);border:1px solid color-mix(in srgb,var(--crit) 35%,transparent);border-left:4px solid var(--crit)}
 .flagbox ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:13.5px}
+.laws{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.laws li{display:grid;gap:2px;font-size:13.5px;padding:10px 12px;border-radius:8px;background:var(--surface-2);border:1px solid var(--line)}
+.laws b{font-weight:600;font-size:13px}
 .hidden{display:none!important}
 
 /* Result panel */
@@ -216,14 +219,14 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display
 <div class="appbar"><div class="appbar-in">
   <div class="logo" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></div>
   <div class="appname">AI Use Case Risk Assessment<small>Intake &amp; risk tiering</small></div>
-  <div class="fw" aria-label="Frameworks covered"><span>EU AI Act</span><span>NIST AI RMF</span><span>GDPR</span><span>US state laws</span></div>
+  <div class="fw" aria-label="Frameworks referenced"><span>NIST AI RMF</span><span>ISO/IEC 42001</span><span>EU AI Act</span><span>GDPR</span><span>US state laws</span></div>
 </div></div>
 
 <div class="wrap">
   <section class="intro">
     <div>
       <h1>Is this AI use case safe to launch?</h1>
-      <p>Describe how you want to use AI and answer five short sections. You'll get the EU AI Act classification, an inherent risk score, the controls required before launch, and who needs to approve it.</p>
+      <p>Describe how you want to use AI and answer five short sections. You'll get a risk tier with the reasons behind it, the laws and frameworks that apply where you operate, the controls required before launch, and who needs to approve it.</p>
     </div>
     <div class="scen-label">Try a scenario</div>
     <div class="scenarios" id="scenarios" role="group" aria-label="Load an example use case"></div>
@@ -259,6 +262,7 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display
             <div class="field"><div class="q" id="q-role">Your role</div><div class="seg" data-radio="role" aria-labelledby="q-role"></div></div>
             <div class="field"><div class="q" id="q-deploy">Who uses it</div><div class="seg" data-radio="deploy" aria-labelledby="q-deploy"></div></div>
           </div>
+          <div class="field"><div class="q" id="q-juris">Where are the people it affects?</div><div class="hint">Select all that apply. Only the laws for these places appear in the results.</div><div class="seg" data-multi="juris" aria-labelledby="q-juris"></div></div>
         </div>
       </fieldset>
 
@@ -268,7 +272,7 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display
       </fieldset>
 
       <fieldset id="sec-3">
-        <legend><div class="sec-head"><span class="sec-ic"><svg class="i" viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M7 7l-3 6a3 3 0 0 0 6 0zM17 7l-3 6a3 3 0 0 0 6 0zM8 21h8"/></svg></span><div><h2>Decisions and domain <em>03</em></h2><p>High-risk status depends on where the output lands.</p></div></div></legend>
+        <legend><div class="sec-head"><span class="sec-ic"><svg class="i" viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M7 7l-3 6a3 3 0 0 0 6 0zM17 7l-3 6a3 3 0 0 0 6 0zM8 21h8"/></svg></span><div><h2>Decisions and domain <em>03</em></h2><p>Risk depends on whose life the output touches, and how much.</p></div></div></legend>
         <div class="sec-body">
           <div class="field">
             <label for="domain">Area the output is used in</label>
@@ -276,8 +280,8 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display
           </div>
           <div class="field"><div class="q" id="q-decision">How much does the AI drive the outcome?</div><div class="seg" data-radio="decision" aria-labelledby="q-decision"></div></div>
           <div class="checks">
-            <label class="check"><input type="checkbox" id="profiling"><span>It evaluates or profiles individuals: scores, ranks, or predicts their behavior, performance, reliability or preferences.</span><span class="ref">Art. 6(3)</span></label>
-            <label class="check" id="narrow-wrap"><input type="checkbox" id="narrow"><span>It only does a narrow procedural or preparatory task (e.g., formats files, flags duplicates) and doesn't materially influence the decision.</span><span class="ref">Art. 6(3)</span></label>
+            <label class="check"><input type="checkbox" id="profiling"><span>It evaluates or profiles individuals: scores, ranks, or predicts their behavior, performance, reliability or preferences.</span></label>
+            <label class="check" id="narrow-wrap"><input type="checkbox" id="narrow"><span>It only does a narrow procedural or preparatory task (e.g., formats files, flags duplicates) and doesn't materially influence the decision.</span></label>
           </div>
         </div>
       </fieldset>
@@ -301,8 +305,8 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display
           <div class="field" id="training-wrap"><div class="q" id="q-training">Can the vendor train on your data?</div><div class="seg" data-radio="training" aria-labelledby="q-training"></div></div>
           <div class="field"><div class="q" id="q-oversight">Human oversight</div><div class="seg" data-radio="oversight" aria-labelledby="q-oversight"></div></div>
           <div class="checks">
-            <label class="check"><input type="checkbox" id="interacts"><span>People interact with it directly (chat, voice agent) and may not realize it's AI.</span><span class="ref">Art. 50(1)</span></label>
-            <label class="check"><input type="checkbox" id="generates"><span>It generates text, images, audio or video that's published or shared outside the company.</span><span class="ref">Art. 50(2)–(4)</span></label>
+            <label class="check"><input type="checkbox" id="interacts"><span>People interact with it directly (chat, voice agent) and may not realize it's AI.</span></label>
+            <label class="check"><input type="checkbox" id="generates"><span>It generates text, images, audio or video that's published or shared outside the company.</span></label>
           </div>
         </div>
       </fieldset>
@@ -313,7 +317,7 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display
 
   <footer>
     <span>Portfolio project by Christine Portieles, CISA, CISM · Rules-based decision support, not legal advice.</span>
-    <span>EU AI Act dates reflect the 2026 Digital AI Omnibus amendments.</span>
+    <span>Aligned to NIST AI RMF and ISO/IEC 42001. EU AI Act dates reflect the 2026 Digital AI Omnibus.</span>
   </footer>
 </div>
 
@@ -329,6 +333,7 @@ const OPTS = {
   reversibility:[['easy','Easy to reverse'],['hard','Hard to reverse'],['irreversible','Irreversible or severe']],
   source:[['api','Third-party model API'],['vendor','Vendor product with built-in AI'],['oss','Open-source, self-hosted'],['inhouse','Built in-house']],
   training:[['no','No, contractually barred'],['yes','Yes'],['unknown','Not sure']],
+  juris:[['us','United States'],['california','California'],['colorado','Colorado'],['nyc','New York City'],['eu','EU or EEA'],['uk','United Kingdom'],['other','Other countries']],
   oversight:[['every','A person reviews every output'],['spot','People spot-check and can override'],['none','No human in the loop']]
 };
 
@@ -351,27 +356,28 @@ const CAPS = [
     follow:{id:'f_crime_basis',q:'What is the prediction based on?',opts:[['profile','Profiling or personality traits alone'],['facts','Objective, verifiable facts tied to a specific crime, supporting a human assessment']]}}
 ];
 
+/* area: plain-language description of what the output affects. eu/co/ca: where specific laws attach. */
 const DOMAINS = {
-  none:{label:'General business or productivity',eu:null,co:false},
-  employment:{label:'Hiring, HR or worker management',eu:'Annex III §4',co:true},
-  education:{label:'Education or vocational training (admissions, grading, proctoring)',eu:'Annex III §3',co:true},
-  credit:{label:'Creditworthiness or lending',eu:'Annex III §5(b)',co:true},
-  insurance:{label:'Life or health insurance pricing and underwriting',eu:'Annex III §5(c)',co:true},
-  services:{label:'Access to public benefits or essential services',eu:'Annex III §5(a)',co:true},
-  healthcare:{label:'Healthcare decisions (not a medical device)',eu:null,co:true},
-  housing:{label:'Housing or tenant screening',eu:null,co:true},
-  biometrics:{label:'Biometric identification or categorization',eu:'Annex III §1',co:false},
-  infrastructure:{label:'Critical infrastructure (utilities, traffic, digital infrastructure)',eu:'Annex III §2',co:false},
-  justice:{label:'Law enforcement, migration, justice or elections',eu:'Annex III §6–8',co:false},
-  product:{label:'Safety component of a regulated product (medical device, machinery, vehicle, toy)',eu:'Annex I',co:false,annex1:true}
+  none:{label:'General business or productivity',area:null,eu:null,co:false,ca:false},
+  employment:{label:'Hiring, HR or worker management',area:'people\u2019s jobs, pay or working conditions',eu:'Annex III \u00a74',co:true,ca:true},
+  education:{label:'Education or vocational training (admissions, grading, proctoring)',area:'access to education or how students are evaluated',eu:'Annex III \u00a73',co:true,ca:true},
+  credit:{label:'Creditworthiness or lending',area:'whether people get credit or loans',eu:'Annex III \u00a75(b)',co:true,ca:true},
+  insurance:{label:'Insurance pricing and underwriting',area:'what people pay for insurance, or whether they can get it',eu:'Annex III \u00a75(c)',co:true,ca:false},
+  services:{label:'Access to public benefits or essential services',area:'access to public benefits or essential services',eu:'Annex III \u00a75(a)',co:true,ca:false},
+  healthcare:{label:'Healthcare decisions (not a medical device)',area:'people\u2019s health care',eu:null,co:true,ca:true},
+  housing:{label:'Housing or tenant screening',area:'where people can live',eu:null,co:true,ca:true},
+  biometrics:{label:'Biometric identification or categorization',area:'identifying or sorting people by their bodies',eu:'Annex III \u00a71',co:false,ca:false},
+  infrastructure:{label:'Critical infrastructure (utilities, traffic, digital infrastructure)',area:'the safety of critical infrastructure',eu:'Annex III \u00a72',co:false,ca:false},
+  justice:{label:'Law enforcement, migration, justice or elections',area:'law enforcement, migration, justice or elections',eu:'Annex III \u00a76\u20138',co:false,ca:false},
+  product:{label:'Safety component of a regulated product (medical device, machinery, vehicle, toy)',area:'the safety of a physical product',eu:'Annex I',co:false,ca:false,annex1:true}
 };
 
 const EXAMPLES = {
-  resume:{name:'Résumé screening assistant',owner:'Talent Acquisition',desc:'Vendor tool that reads job applications, scores each candidate against the job description, and ranks them so recruiters can decide who to interview.',role:'buy',deploy:'internal',caps:[],follow:{},domain:'employment',decision:'support',profiling:true,narrow:false,data:['personal'],people:['public'],scale:'mid',reversibility:'hard',source:'vendor',training:'unknown',oversight:'spot',interacts:false,generates:false},
-  chatbot:{name:'Customer support chatbot',owner:'Customer Experience',desc:'LLM chatbot on the help center that answers account and billing questions and looks up order status. Hands off to a human agent on request.',role:'build',deploy:'public',caps:[],follow:{},domain:'none',decision:'info',profiling:false,narrow:false,data:['personal'],people:['customers'],scale:'large',reversibility:'easy',source:'api',training:'no',oversight:'none',interacts:true,generates:false},
-  code:{name:'Internal coding assistant',owner:'Engineering',desc:'Engineers use an AI coding assistant in their IDE to suggest code and write tests. All code still goes through pull-request review.',role:'buy',deploy:'internal',caps:[],follow:{},domain:'none',decision:'support',profiling:false,narrow:false,data:['internal'],people:['employees'],scale:'small',reversibility:'easy',source:'vendor',training:'no',oversight:'every',interacts:false,generates:false},
-  emotion:{name:'Call-center mood monitor',owner:'Contact Center Operations',desc:'Analyzes agents’ voice and webcam during calls to detect frustration or stress, and flags agents to supervisors for coaching.',role:'buy',deploy:'internal',caps:['c_emotion'],follow:{f_emo_purpose:'other'},domain:'employment',decision:'support',profiling:true,narrow:false,data:['personal','sensitive'],people:['employees'],scale:'mid',reversibility:'hard',source:'vendor',training:'unknown',oversight:'spot',interacts:false,generates:false},
-  blank:{name:'',owner:'',desc:'',role:'buy',deploy:'internal',caps:[],follow:{},domain:'none',decision:'info',profiling:false,narrow:false,data:[],people:[],scale:'small',reversibility:'easy',source:'api',training:'unknown',oversight:'every',interacts:false,generates:false}
+  resume:{juris:['us','california','nyc'],name:'Résumé screening assistant',owner:'Talent Acquisition',desc:'Vendor tool that reads job applications, scores each candidate against the job description, and ranks them so recruiters can decide who to interview.',role:'buy',deploy:'internal',caps:[],follow:{},domain:'employment',decision:'support',profiling:true,narrow:false,data:['personal'],people:['public'],scale:'mid',reversibility:'hard',source:'vendor',training:'unknown',oversight:'spot',interacts:false,generates:false},
+  chatbot:{juris:['us','eu'],name:'Customer support chatbot',owner:'Customer Experience',desc:'LLM chatbot on the help center that answers account and billing questions and looks up order status. Hands off to a human agent on request.',role:'build',deploy:'public',caps:[],follow:{},domain:'none',decision:'info',profiling:false,narrow:false,data:['personal'],people:['customers'],scale:'large',reversibility:'easy',source:'api',training:'no',oversight:'none',interacts:true,generates:false},
+  code:{juris:['us'],name:'Internal coding assistant',owner:'Engineering',desc:'Engineers use an AI coding assistant in their IDE to suggest code and write tests. All code still goes through pull-request review.',role:'buy',deploy:'internal',caps:[],follow:{},domain:'none',decision:'support',profiling:false,narrow:false,data:['internal'],people:['employees'],scale:'small',reversibility:'easy',source:'vendor',training:'no',oversight:'every',interacts:false,generates:false},
+  emotion:{juris:['us','eu'],name:'Call-center mood monitor',owner:'Contact Center Operations',desc:'Analyzes agents’ voice and webcam during calls to detect frustration or stress, and flags agents to supervisors for coaching.',role:'buy',deploy:'internal',caps:['c_emotion'],follow:{f_emo_purpose:'other'},domain:'employment',decision:'support',profiling:true,narrow:false,data:['personal','sensitive'],people:['employees'],scale:'mid',reversibility:'hard',source:'vendor',training:'unknown',oversight:'spot',interacts:false,generates:false},
+  blank:{juris:['us'],name:'',owner:'',desc:'',role:'buy',deploy:'internal',caps:[],follow:{},domain:'none',decision:'info',profiling:false,narrow:false,data:[],people:[],scale:'small',reversibility:'easy',source:'api',training:'unknown',oversight:'every',interacts:false,generates:false}
 };
 
 
@@ -403,7 +409,7 @@ document.querySelectorAll('[data-multi]').forEach(el=>{
   el.innerHTML = OPTS[n].map(([v,l])=>`<label class="opt"><input type="checkbox" name="${n}" id="${n}-${v}" value="${v}"><span>${esc(l)}</span></label>`).join('');
 });
 $('#caps').innerHTML = CAPS.map(c=>`<div class="cap"><label class="check"><input type="checkbox" name="caps" id="${c.id}" value="${c.id}"><span>${esc(c.q)}</span></label>${c.follow?`<div class="follow hidden" id="fw-${c.id}"><div class="q" id="q-${c.follow.id}">${esc(c.follow.q)}</div><div class="seg" role="radiogroup" aria-labelledby="q-${c.follow.id}">${c.follow.opts.map(([v,l])=>`<label class="opt"><input type="radio" name="${c.follow.id}" id="${c.follow.id}-${v}" value="${v}"><span>${esc(l)}</span></label>`).join('')}</div></div>`:''}</div>`).join('');
-$('#domain').innerHTML = Object.entries(DOMAINS).map(([k,d])=>`<option value="${k}">${esc(d.label)}${d.eu?' — '+d.eu:''}</option>`).join('');
+$('#domain').innerHTML = Object.entries(DOMAINS).map(([k,d])=>`<option value="${k}">${esc(d.label)}</option>`).join('');
 
 /* ---------- State ---------- */
 function read(){
@@ -413,7 +419,7 @@ function read(){
     name:$('#name').value.trim(), owner:$('#owner').value.trim(), desc:$('#desc').value.trim(),
     role:radio('role'), deploy:radio('deploy'), caps:multi('caps'), follow:Object.fromEntries(CAPS.filter(c=>c.follow).map(c=>[c.follow.id,radio(c.follow.id)])), domain:$('#domain').value,
     decision:radio('decision'), profiling:$('#profiling').checked, narrow:$('#narrow').checked,
-    data:multi('data'), people:multi('people'), scale:radio('scale'), reversibility:radio('reversibility'),
+    data:multi('data'), people:multi('people'), juris:multi('juris'), scale:radio('scale'), reversibility:radio('reversibility'),
     source:radio('source'), training:radio('training'), oversight:radio('oversight'),
     interacts:$('#interacts').checked, generates:$('#generates').checked
   };
@@ -423,8 +429,8 @@ function load(s){
   ['role','deploy','decision','scale','reversibility','source','training','oversight'].forEach(n=>{
     document.querySelectorAll(`input[name="${n}"]`).forEach(i=>i.checked=(i.value===s[n]));
   });
-  ['data','people','caps'].forEach(n=>{
-    document.querySelectorAll(`input[name="${n}"]`).forEach(i=>i.checked=s[n].includes(i.value));
+  ['data','people','caps','juris'].forEach(n=>{
+    document.querySelectorAll(`input[name="${n}"]`).forEach(i=>i.checked=(s[n]||[]).includes(i.value));
   });
   ['profiling','narrow','interacts','generates'].forEach(k=>$('#'+k).checked=!!s[k]);
   CAPS.forEach(c=>{ if(c.follow) document.querySelectorAll(`input[name="${c.follow.id}"]`).forEach(i=>i.checked=((s.follow||{})[c.follow.id]===i.value)); });
@@ -465,12 +471,12 @@ function screen(s){
   const workOrSchool = s.people.includes('employees') || ['employment','education'].includes(s.domain);
   if(has('c_emotion')){
     if(!f.f_emo_purpose) open.push('what emotion detection is for');
-    else if(f.f_emo_purpose!=='safety' && workOrSchool) P.push(['5(1)(f)','It infers the emotions of people at work or in education, for a purpose other than medical or safety reasons.']);
-    else H.push(['Annex III §1(c)','It recognizes emotions, a listed high-risk biometric use.']);
+    else if(f.f_emo_purpose!=='safety' && workOrSchool) P.push(['5(1)(f)','It reads the emotions of people at work or in school, for a purpose other than medical or safety reasons.']);
+    else H.push(['Annex III §1(c)','It recognizes people\u2019s emotions from biometric signals.']);
   }
   if(has('c_bioid')){
     if(!f.f_bio_set) open.push('how biometric identification is used');
-    else if(f.f_bio_set==='rbi') P.push(['5(1)(h)','It identifies people live in public spaces for law enforcement. Only narrow, pre-authorized exceptions exist.']);
+    else if(f.f_bio_set==='rbi') P.push(['5(1)(h)','It identifies people live in public spaces for police use.']);
     else if(f.f_bio_set==='identify') H.push(['Annex III §1(a)','It identifies people remotely from biometric data.']);
   }
   if(has('c_biocat')){
@@ -497,9 +503,9 @@ function screen(s){
     else H.push(['Annex III §6','It supports risk assessments related to criminal offenses.']);
   }
   const personal = s.data.some(d=>['personal','financial','sensitive','children'].includes(d));
-  const consequential = !!(DOMAINS[s.domain].eu || DOMAINS[s.domain].co);
+  const consequential = !!DOMAINS[s.domain].area;
   if(s.decision==='auto' && s.oversight==='none' && (consequential || personal))
-    R.push({id:'admt',text:'Makes automated decisions about people with no human review. That triggers GDPR Art. 22 rights, California’s automated decision-making (ADMT) rules and Colorado AI Act duties, and is hard to defend if a decision is challenged.'});
+    R.push({id:'admt',text:'Makes automated decisions about people with no human review. These are the decisions privacy and AI laws regulate most, and they\u2019re hard to defend if someone challenges one.'});
   if((s.source==='api'||s.source==='vendor') && s.training!=='no' && (s.data.includes('sensitive')||s.data.includes('children')))
     R.push({id:'vendor',text:'Sends sensitive or children’s data to a vendor that '+(s.training==='yes'?'can':'may be able to')+' train its models on it.'});
   if(s.profiling && s.oversight==='none' && (s.people.includes('vulnerable')||s.data.includes('children')))
@@ -510,50 +516,27 @@ function screen(s){
 function classify(s){
   const d = DOMAINS[s.domain];
   const {P,H,open} = screen(s);
-  if(P.length){
-    return {cls:'prohibited',floor:5,title:'Likely prohibited practice',ref:'Art. '+P.map(p=>p[0]).join(', '),
-      reasons:P.map(p=>p[1]+' (Art. '+p[0]+')'),
-      date:'Prohibitions have applied since 2 Feb 2025. Confirm with Legal; a few narrow exceptions exist.'};
+  if(P.length) return {cls:'prohibited',floor:5,title:'Unacceptable risk',
+    reasons:[...P.map(p=>p[1]),'Uses like this are banned in the EU and break most AI acceptable-use policies.']};
+  if(open.length) return {cls:'review',floor:4,title:'Possible unacceptable risk',
+    reasons:['Section 02 needs an answer on '+open.join('; ')+'.','Until it\u2019s answered, the use case is treated as Critical.']};
+  if(d.area){
+    if(s.narrow && !s.profiling) return {cls:'exception',floor:2,title:'Supporting role in a high-impact area',
+      reasons:['It\u2019s used in an area that affects '+d.area+', but only for a narrow procedural or preparatory task.','Document why it doesn\u2019t influence the decision, and reassess if its role grows.']};
+    const r=['Its output affects '+d.area+'.'];
+    if(s.profiling) r.push('It profiles individuals, so it can\u2019t be treated as a minor supporting tool.');
+    H.forEach(h=>r.push(h[1]));
+    return {cls:'high',floor:3,title:'High-impact use',reasons:r};
   }
-  if(open.length){
-    return {cls:'review',floor:4,title:'Possible prohibited practice',ref:'Art. 5',
-      reasons:['Section 02 needs an answer on '+open.join('; ')+'.','Until it’s answered, the use case is treated as Critical.'],
-      date:'Prohibitions have applied since 2 Feb 2025.'};
-  }
-  if(d.annex1){
-    return {cls:'high',floor:3,title:'High-risk AI system',ref:'Art. 6(1) · Annex I',
-      reasons:['Safety component of a product covered by EU harmonisation law that needs third-party conformity assessment.'],
-      date:'Annex I obligations apply from 2 Aug 2028 (deferred by the Digital AI Omnibus).'};
-  }
-  if(d.eu){
-    if(s.narrow && !s.profiling){
-      return {cls:'exception',floor:2,title:'Annex III area, exception claimed',ref:'Art. 6(3)',
-        reasons:['Used in a listed high-risk area ('+d.eu+'), but you’ve stated it only performs a narrow procedural or preparatory task.','The exception holds only if it doesn’t materially influence the decision. Document the assessment before launch; a regulator can ask for it.'],
-        date:'If the exception fails, Annex III obligations apply from 2 Dec 2027.'};
-    }
-    const r = ['Output is used in a listed high-risk area: '+lc(d.label)+' ('+d.eu+').'];
-    if(s.profiling) r.push('It profiles individuals, so the Art. 6(3) exception isn’t available.');
-    else if(s.narrow) r.push('Narrow-task exception noted but not applied. Recheck the answers.');
-    else r.push('No Art. 6(3) exception claimed.');
-    H.forEach(h=>r.push(h[1]+' ('+h[0]+').'));
-    return {cls:'high',floor:3,title:'High-risk AI system',ref:'Art. 6(2) · '+d.eu,reasons:r,
-      date:'Annex III obligations apply from 2 Dec 2027 (deferred by the Digital AI Omnibus).'};
-  }
-  if(H.length){
-    return {cls:'high',floor:3,title:'High-risk AI system',ref:'Art. 6(2) \u00b7 '+H.map(h=>h[0]).join(', '),
-      reasons:H.map(h=>h[1]+' ('+h[0]+').'),
-      date:'Annex III obligations apply from 2 Dec 2027 (deferred by the Digital AI Omnibus).'};
-  }
+  if(H.length) return {cls:'high',floor:3,title:'High-impact use',reasons:H.map(h=>h[1])};
   if(s.interacts||s.generates){
     const r=[];
-    if(s.interacts) r.push('People interact with it directly, so they must be told they’re dealing with AI (Art. 50(1)).');
-    if(s.generates) r.push('Generated content shared externally must be marked as AI-generated; deepfakes must be disclosed (Art. 50(2), 50(4)).');
-    return {cls:'limited',floor:2,title:'Limited risk: transparency duties',ref:'Art. 50',reasons:r,
-      date:'Art. 50 duties apply from 2 Aug 2026. Check the Omnibus for provider grace periods on content marking.'};
+    if(s.interacts) r.push('People talk to it directly, so they need to be told it\u2019s AI.');
+    if(s.generates) r.push('Content it creates leaves the company, so it should be labeled as AI-generated.');
+    return {cls:'limited',floor:2,title:'Transparency required',reasons:r};
   }
-  return {cls:'minimal',floor:1,title:'Minimal risk',ref:'No specific obligations',
-    reasons:['Not a prohibited practice, not in a high-risk area, and no transparency trigger.','Internal policy and general laws (privacy, consumer protection, anti-discrimination) still apply.'],
-    date:'Voluntary codes of conduct encouraged.'};
+  return {cls:'minimal',floor:1,title:'Standard use',
+    reasons:['No banned capability, no high-impact decisions about people, and no transparency trigger.','Your AI policy and general laws (privacy, consumer protection, anti-discrimination) still apply.']};
 }
 
 const TIERS = {
@@ -568,58 +551,80 @@ const band = v => v>=75?4:v>=50?3:v>=25?2:1;
 function controls(s,t,reg){
   const vendor = s.source==='api'||s.source==='vendor';
   const personal = s.data.some(d=>['personal','financial','sensitive','children'].includes(d));
+  const J = new Set(s.juris||[]), d = DOMAINS[s.domain];
   const L = [];
   const add = (id,text,tag,stop) => L.push({id,text,tag,stop});
   if(t===5){
-    add('AI-00','Stop. Don’t deploy or pilot. Get a Legal review of the prohibited practice and document the decision.','EU AI Act Art. 5',true);
+    add('AI-00','Stop. Don\u2019t deploy or pilot. Get a Legal review and document the decision.','GOVERN',true);
     add('AI-01','Record the use case and decision in the AI inventory.','GOVERN');
-    if(vendor) add('AI-04','Notify Procurement and TPRM so the vendor isn’t onboarded for this purpose.','GOVERN');
+    if(vendor) add('AI-04','Notify Procurement and TPRM so the vendor isn\u2019t onboarded for this purpose.','GOVERN \u00b7 TPRM');
     return L;
   }
   const RF = screen(s).R.map(r=>r.id);
-  if(reg.cls==='review') add('AI-00','Answer the open capability questions in section 02 and get a Legal read before going further.','GOVERN \u00b7 Art. 5',true);
+  if(reg.cls==='review') add('AI-00','Answer the open capability questions in section 02 and get a Legal read before going further.','GOVERN',true);
   add('AI-01','Register the use case in the AI inventory with model, vendor and data details.','GOVERN');
   add('AI-02','Name an accountable business owner and a technical owner.','GOVERN');
   add('AI-03','Confirm the use fits the AI acceptable-use policy.','GOVERN');
-  if(vendor) add('AI-04','Run a third-party AI vendor assessment: model provenance, data retention, sub-processors, security.','GOVERN · TPRM');
-  if(vendor && s.training!=='no') add('AI-05','Contractually bar the vendor from training on your data, or get documented consent.','GOVERN · TPRM');
-  if(personal && (t>=2 || s.data.includes('sensitive') || s.data.includes('children'))) add('AI-06','Complete a privacy review or DPIA covering purpose, minimization and retention.','MAP · GDPR Art. 35');
-  if(s.interacts) add('AI-07','Tell users they’re interacting with AI at the start of the interaction.','MANAGE · Art. 50(1)');
-  if(s.generates) add('AI-08','Label or watermark AI-generated content that leaves the company.','MANAGE · Art. 50(2)');
-  if(reg.cls==='exception') add('AI-09','Document the Art. 6(3) assessment showing why it isn’t high-risk; register it if required.','MAP · Art. 6(4)');
+  if(vendor) add('AI-04','Run a third-party AI vendor assessment: model provenance, data retention, sub-processors, security.','GOVERN \u00b7 TPRM');
+  if(vendor && s.training!=='no') add('AI-05','Contractually bar the vendor from training on your data, or get documented consent.','GOVERN \u00b7 TPRM');
+  if(personal && (t>=2 || s.data.includes('sensitive') || s.data.includes('children'))) add('AI-06','Complete a privacy review or DPIA covering purpose, minimization and retention.','MAP \u00b7 Privacy');
+  if(s.interacts) add('AI-07','Tell users they\u2019re interacting with AI at the start of the interaction.','MANAGE \u00b7 Transparency');
+  if(s.generates) add('AI-08','Label or watermark AI-generated content that leaves the company.','MANAGE \u00b7 Transparency');
+  if(reg.cls==='exception') add('AI-09','Document why the system doesn\u2019t influence the decision, and recheck if its role changes.','MAP');
   if(t>=2){
     add('AI-10','Test output accuracy and failure modes before launch, with acceptance criteria.','MEASURE');
     add('AI-11','Monitor outputs and drift after launch, with a named reviewer and thresholds.','MANAGE');
   }
-  if(t>=2 && s.oversight!=='every') add('AI-12','Define the human oversight procedure: who can override, when, and how it’s logged.','MANAGE · Art. 14');
-  if(RF.includes('admt')) add('AI-21','Put a human review step before decisions take effect, and give people a way to contest them.','MANAGE \u00b7 GDPR Art. 22');
+  if(t>=2 && s.oversight!=='every') add('AI-12','Define the human oversight procedure: who can override, when, and how it\u2019s logged.','MANAGE');
+  if(RF.includes('admt')) add('AI-21','Put a human review step before decisions take effect, and give people a way to contest them.','MANAGE');
   if(RF.includes('vendor')) add('AI-22','Stop sending sensitive data until the vendor contract bars training on it, or remove that data from the workflow.','GOVERN \u00b7 TPRM',true);
-  if(t>=3 || s.profiling || DOMAINS[s.domain].co) add('AI-13','Test for bias and disparate impact across protected groups.','MEASURE');
+  if(t>=3 || s.profiling || d.area) add('AI-13','Test for bias and disparate impact across protected groups.','MEASURE');
   if(t>=3){
-    add('AI-14','Complete an AI impact assessment (a FRIA where Art. 27 applies).','MAP · Art. 27');
-    add('AI-15','Keep event logs and records for traceability.','MANAGE · Art. 12 / 26');
-    add('AI-16','Add the system to the AI incident response runbook.','MANAGE · Art. 73');
+    add('AI-14','Complete an AI impact assessment covering affected people, likely harms and mitigations.','MAP');
+    add('AI-15','Keep event logs and decision records for traceability.','MANAGE');
+    add('AI-16','Add the system to the AI incident response runbook.','MANAGE');
   }
   if(reg.cls==='high' && s.role==='build'){
-    add('AI-17','Provider duties: risk management system, technical documentation, data governance.','EU AI Act Art. 9–11');
-    add('AI-18','Conformity assessment, CE marking and EU database registration before market.','EU AI Act Art. 43, 49');
+    add('AI-17','Document the system: intended use, training data, test results and known limitations (a model card).','MAP');
+    if(J.has('eu')) add('AI-18','For the EU: conformity assessment, CE marking and EU database registration before launch.','GOVERN \u00b7 EU AI Act');
   }
   if(reg.cls==='high' && s.role==='buy'){
-    add('AI-19','Deployer duties: use per vendor instructions, assign trained overseers, inform affected workers or people.','EU AI Act Art. 26');
-    add('AI-20','Get the vendor’s conformity evidence and instructions for use.','GOVERN · TPRM');
+    add('AI-19','Use it the way the vendor intends, assign trained overseers, and tell affected people AI is involved.','MANAGE');
+    add('AI-20','Get the vendor\u2019s test results, model documentation and instructions for use.','GOVERN \u00b7 TPRM');
   }
+  if(s.decision!=='info' && ((J.has('california')&&d.ca)||(J.has('colorado')&&d.co)))
+    add('AI-23','Give people notice before an AI-assisted decision, a way to opt out or appeal, and an explanation afterward.','MANAGE \u00b7 Notice');
+  if(J.has('nyc') && s.domain==='employment') add('AI-24','Commission an independent bias audit and publish the results before use.','MEASURE \u00b7 NYC LL144');
   return L;
 }
 
-function flags(s){
-  const F=[]; const personal=s.data.some(d=>['personal','financial','sensitive','children'].includes(d));
-  if(s.decision==='auto' && personal) F.push('GDPR Art. 22: people can contest solely automated decisions with legal or similarly significant effects. Offer human review on request.');
-  if(s.domain==='employment') F.push('NYC Local Law 144: screening candidates or employees for NYC roles requires an independent bias audit and notice.');
-  if(DOMAINS[s.domain].co && s.decision!=='info') F.push('Colorado AI Act (SB 24-205): consequential decisions trigger impact assessments and consumer notices. Confirm the current effective date.');
-  if(s.data.includes('sensitive')) F.push('Sensitive data: GDPR Art. 9 conditions, and opt-in consent under many US state privacy laws.');
-  if(s.data.includes('children')) F.push('Children’s data: COPPA and state children’s privacy laws may require verifiable parental consent.');
-  if(s.data.includes('financial')) F.push('Financial data: check GLBA and, for credit decisions, adverse action notice duties (ECOA / FCRA).');
-  return F;
+/* Laws and frameworks, filtered to where affected people are. */
+function laws(s){
+  const J = new Set(s.juris||[]), d = DOMAINS[s.domain], sr = screen(s), reg = classify(s);
+  const personal = s.data.some(x=>['personal','financial','sensitive','children'].includes(x));
+  const L = []; const add = (law,text) => L.push({law,text});
+  if(J.has('eu')){
+    if(reg.cls==='prohibited') add('EU AI Act','Banned practice under Art. '+sr.P.map(p=>p[0]).join(', ')+'. Prohibitions have applied since 2 Feb 2025.');
+    else if(reg.cls==='review') add('EU AI Act','Answer the open questions to rule out a banned practice under Art. 5.');
+    else if(reg.cls==='high' && d.annex1) add('EU AI Act','High-risk under Art. 6(1) and Annex I. Obligations apply from 2 Aug 2028.');
+    else if(reg.cls==='high' && (d.eu || sr.H.length)) add('EU AI Act','High-risk under Art. 6(2) ('+[d.eu,...sr.H.map(h=>h[0])].filter(Boolean).join(', ')+'). '+(s.role==='build'?'Provider':'Deployer')+' obligations apply from 2 Dec 2027.');
+    else if(reg.cls==='exception' && d.eu) add('EU AI Act','Listed high-risk area ('+d.eu+'), but the Art. 6(3) exception may apply. Document the assessment.');
+    if(reg.cls!=='prohibited' && (s.interacts||s.generates)) add('EU AI Act','Art. 50 transparency: '+[s.interacts?'disclose AI interactions':'',s.generates?'mark AI-generated content':''].filter(Boolean).join(' and ')+'.');
+    if(!L.length) add('EU AI Act','No specific obligations for this use.');
+  }
+  if((J.has('eu')||J.has('uk')) && personal)
+    add(J.has('eu')?'GDPR':'UK GDPR','Lawful basis and a DPIA for high-risk processing'+(s.decision==='auto'?'; Art. 22 rights for solely automated decisions':'')+(s.data.includes('sensitive')?'; Art. 9 conditions for sensitive data':'')+'.');
+  if(J.has('california') && d.ca && s.decision!=='info') add('California CCPA (ADMT rules)','Significant decisions made with automated decision-making technology need a pre-use notice, opt-out and access rights, and a risk assessment.');
+  if(J.has('colorado') && d.co && s.decision!=='info') add('Colorado AI Act','Consequential decisions require impact assessments, consumer notices and a right to appeal. Confirm the current effective date.');
+  if(J.has('nyc') && s.domain==='employment') add('NYC Local Law 144','Automated hiring and promotion tools need an independent bias audit and candidate notice.');
+  const us = ['us','california','colorado','nyc'].some(x=>J.has(x));
+  if(us && s.domain==='employment') add('Title VII','Employers remain liable for discriminatory hiring outcomes, including those from AI tools.');
+  if(us && (s.data.includes('financial')||s.domain==='credit')) add('GLBA / ECOA / FCRA','Safeguard financial data; credit decisions need adverse action notices with specific reasons.');
+  if(us && s.data.includes('children')) add('COPPA','Verifiable parental consent for data from children under 13.');
+  if(us && s.data.includes('sensitive')) add('US state privacy laws','Many require opt-in consent to process sensitive data.');
+  add('NIST AI RMF','Controls are tagged by function: GOVERN, MAP, MEASURE, MANAGE.');
+  add('ISO/IEC 42001','Keep this assessment as the AI system impact assessment record.');
+  return L;
 }
 
 /* ---------- Render result ---------- */
@@ -631,7 +636,7 @@ const CIRC = 2*Math.PI*40;
 function evaluate(s){
   const sc = score(s), reg = classify(s), b = band(sc.value), rf = screen(s).R;
   const t = reg.floor===5 ? 5 : Math.max(b, reg.floor, rf.length?3:0);
-  const raisedBy = t===b||t===5 ? '' : (reg.floor>=t ? 'the EU AI Act classification' : 'red flags');
+  const raisedBy = t===b||t===5 ? '' : (reg.floor>=t ? 'its risk classification' : 'red flags');
   return {sc, reg, b, t, rf, raisedBy};
 }
 function tagsHtml(tag){
@@ -644,7 +649,7 @@ function update(){
   $('#training-wrap').classList.toggle('hidden', !(s.source==='api'||s.source==='vendor'));
   const {sc, reg, b, t, rf, raisedBy} = evaluate(s);
   const T = TIERS[t];
-  const ctrls = controls(s,t,reg), fl = flags(s);
+  const ctrls = controls(s,t,reg), lw = laws(s);
   const id = assessId(s.name);
   const drivers = sc.factors.filter(x=>x.pts>0).sort((a,b)=>b.pts-a.pts).slice(0,5);
   const res = $('#result');
@@ -671,11 +676,10 @@ function update(){
     </div>
     ${rf.length?`<div class="block"><h3>${ic('alert')}Red flags<span class="n">${rf.length}</span></h3><div class="flagbox"><ul>${rf.map(r=>`<li>${esc(r.text)}</li>`).join('')}</ul></div></div>`:''}
     <div class="block">
-      <h3>${ic('law')}EU AI Act classification</h3>
+      <h3>${ic('shield')}Why it\u2019s rated this way</h3>
       <div class="reg" style="--rc:var(${REG_COLOR[reg.cls]})">
-        <div class="reg-title"><span>${reg.title}</span><code>${esc(reg.ref)}</code></div>
+        <div class="reg-title"><span>${reg.title}</span></div>
         <ul>${reg.reasons.map(r=>`<li>${esc(r)}</li>`).join('')}</ul>
-        <div class="date">${esc(reg.date)} Applies if the system is placed on the EU market or its output is used in the EU.</div>
       </div>
     </div>
     ${t===5?'':`<div class="block">
@@ -686,7 +690,9 @@ function update(){
       <h3>${ic('list')}Required before launch<span class="n">${ctrls.length}</span></h3>
       <ul class="controls">${ctrls.map(c=>`<li class="${c.stop?'stop':''}"><span class="box" aria-hidden="true"></span><span class="cid">${c.id}</span><span>${esc(c.text)}</span><span class="tags">${tagsHtml(c.tag)}</span></li>`).join('')}</ul>
     </div>
-    ${fl.length?`<div class="block flags"><h3>${ic('flag')}Also check<span class="n">${fl.length}</span></h3><ul>${fl.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></div>`:''}
+    <div class="block"><h3>${ic('law')}Laws and frameworks that apply<span class="n">${lw.length}</span></h3>
+      ${(s.juris||[]).length?'':`<p class="fine">Select where the affected people are in section 01 to see which laws apply.</p>`}
+      <ul class="laws">${lw.map(l=>`<li><b>${esc(l.law)}</b><span>${esc(l.text)}</span></li>`).join('')}</ul></div>
     <div class="block">
       <h3>${ic('route')}Governance path</h3>
       <dl class="kv">
@@ -697,7 +703,7 @@ function update(){
     </div>
     <div class="block">
       <div class="actions"><button type="button" class="btn" id="copy">${ic('copy')}Copy assessment summary</button><span class="copied" id="copied" aria-live="polite"></span></div>
-      <p class="fine">Tags show the NIST AI RMF function (GOVERN, MAP, MEASURE, MANAGE) and the legal reference for each control. Prohibited practices reflect Art. 5 as enacted; check the amended text for practices added in 2026.</p>
+      <p class="fine">The risk tier comes from what the system does and who it affects, wherever it\u2019s used. Laws are listed only for the places you selected. Decision support only, not legal advice.</p>
     </div>`;
   summaryText = [
     `AI USE CASE RISK ASSESSMENT  ${id}`,
@@ -707,13 +713,12 @@ function update(){
     ``,
     `Risk tier: ${T.name}   Inherent risk score: ${sc.value}/100`,
     ...(rf.length?['Red flags:',...rf.map(r=>`  ! ${r.text}`)]:[]),
-    `EU AI Act: ${reg.title} (${reg.ref})`,
+    `Classification: ${reg.title}`,
     ...reg.reasons.map(r=>`  - ${r}`),
-    `  ${reg.date}`,
     ``,
     `Required controls:`,
     ...ctrls.map(c=>`  [ ] ${c.id} ${c.text} (${c.tag})`),
-    fl.length?`\nAlso check:\n`+fl.map(f=>`  - ${f}`).join('\n'):'',
+    `\nLaws and frameworks:\n`+lw.map(l=>`  - ${l.law}: ${l.text}`).join('\n'),
     ``,
     `Approval: ${T.approve}`,
     `Reassess: ${T.cadence}`,
@@ -732,7 +737,7 @@ function update(){
 /* ---------- Section navigator ---------- */
 function stepper(s){
   const done = {
-    1: !!(s.name && s.desc && s.role && s.deploy),
+    1: !!(s.name && s.desc && s.role && s.deploy && (s.juris||[]).length),
     2: screen(s).open.length===0,
     3: !!(s.domain && s.decision),
     4: s.data.length>0 && s.people.length>0 && !!s.scale && !!s.reversibility,

@@ -10,7 +10,7 @@ A rules-based intake and risk-tiering tool for AI use cases. Someone describes h
 - The **approval path** and **reassessment cadence**
 - A **copyable assessment summary** for the AI inventory or ticket
 
-**[Try it live →](https://YOUR-USERNAME.github.io/ai-use-case-risk-assessment/)**
+**[Try it live →](https://cmp2627.github.io/ai-use-case-risk-assessment/)**
 
 Four built-in examples show each outcome: a résumé screener (High), a customer support chatbot (Moderate), an internal coding assistant (Low) and a call-center mood monitor (Prohibited).
 

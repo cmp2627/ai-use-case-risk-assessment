@@ -125,7 +125,7 @@ One self-contained HTML file: vanilla JavaScript, no build step, no data leaves 
 
 ## How this was built
 
-I set the direction and made the design and risk decisions: what the tool assesses, the capability screen in place of self-reported questions, rating risk by use rather than by jurisdiction, the fast track for low-impact uses, the scoring factors and tier floors, and which laws apply where. I built it with Claude as an AI coding assistant, then reviewed and tested every change.
+I set the direction and made the design and risk decisions: what the tool assesses, the capability screen in place of self-reported questions, rating risk by use rather than by jurisdiction, the fast track for low-impact uses, the scoring factors and tier floors, and which laws apply where. I built it with Claude as an AI coding assistant, and I review and approve every change before it goes live.
 
 ## Credit and use
 

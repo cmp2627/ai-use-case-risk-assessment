@@ -1,7 +1,16 @@
 <!DOCTYPE html>
+<!--
+  AI Use Case Risk Assessment
+  Concept, design and risk logic by Christine Portieles, CISA, CISM (github.com/cmp2627).
+  Built with AI assistance (Claude).
+  Free to use at https://cmp2627.github.io/ai-use-case-risk-assessment/
+  If you reference or build on this work, please credit Christine Portieles
+  and link to https://github.com/cmp2627/ai-use-case-risk-assessment
+-->
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="author" content="Christine Portieles">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI Use Case Risk Assessment</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -234,7 +243,7 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display
 <body>
 <div class="appbar"><div class="appbar-in">
   <div class="logo" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></div>
-  <div class="appname">AI Use Case Risk Assessment<small>Intake &amp; risk tiering</small></div>
+  <div class="appname">AI Use Case Risk Assessment<small>by Christine Portieles</small></div>
   <div class="fw" aria-label="Frameworks referenced"><span>NIST AI RMF</span><span>ISO/IEC 42001</span><span>EU AI Act</span><span>GDPR</span><span>US state laws</span></div>
 </div></div>
 
@@ -341,7 +350,7 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display
   </div>
 
   <footer>
-    <span>Portfolio project by Christine Portieles, CISA, CISM · Rules-based decision support, not legal advice.</span>
+    <span>Concept, design and risk logic by Christine Portieles, CISA, CISM. Built with AI assistance. Free to use. Decision support, not legal advice.</span>
     <span>Aligned to NIST AI RMF and ISO/IEC 42001. EU AI Act dates reflect the 2026 Digital AI Omnibus.</span>
   </footer>
 </div>
@@ -771,7 +780,8 @@ function update(){
     `Approval: ${T.approve}`,
     `Reassess: ${T.cadence}`,
     ``,
-    `Decision support only; not legal advice.`
+    `Decision support only; not legal advice.`,
+    `Generated with AI Use Case Risk Assessment by Christine Portieles (cmp2627.github.io/ai-use-case-risk-assessment).`
   ].filter(x=>x!=='').join('\n');
   $('#copy').addEventListener('click', async ()=>{
     try{ await navigator.clipboard.writeText(summaryText); $('#copied').textContent='Copied to clipboard.'; }

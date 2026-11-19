@@ -1,0 +1,23 @@
+Copyright (c) 2026 Christine Portieles. All rights reserved.
+
+AI Use Case Risk Assessment, including its source code, scoring model, rules,
+questions, written content and design, is the original work of
+Christine Portieles.
+
+PERMITTED
+- Using the hosted tool at https://cmp2627.github.io/ai-use-case-risk-assessment/
+  free of charge.
+- Viewing this repository, and the other uses GitHub's Terms of Service allow
+  for public repositories (such as viewing and forking on GitHub).
+
+NOT PERMITTED WITHOUT PRIOR WRITTEN PERMISSION
+- Copying, modifying or creating derivative works of the code, scoring model,
+  rules or content.
+- Distributing, publishing, sublicensing, hosting or selling any part of it,
+  including as part of another product or service.
+
+To request permission, contact Christine Portieles through GitHub (@cmp2627).
+
+DISCLAIMER
+The tool is provided "as is", without warranty of any kind. It is decision
+support only and is not legal advice.

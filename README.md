@@ -1,6 +1,6 @@
 # AI Use Case Risk Assessment
 
-**Designed and built by Christine Portieles**, CISA, CISM · © 2026 · All rights reserved
+**Concept, design and risk logic by Christine Portieles**, CISA, CISM · Built with AI assistance
 
 A rules-based intake and risk-tiering tool for AI use cases. Someone describes how they want to use AI, answers five short sections of questions, and gets:
 
@@ -123,10 +123,10 @@ One self-contained HTML file: vanilla JavaScript, no build step, no data leaves 
 
 **Christine Portieles**, CISA, CISM · Juris Master, Cybersecurity, Privacy & Technology Risk Management (FSU College of Law)
 
-The tool, scoring model, rules and content in this repository are my original work.
+## How this was built
 
-## License
+I set the direction and made the design and risk decisions: what the tool assesses, the capability screen in place of self-reported questions, rating risk by use rather than by jurisdiction, the fast track for low-impact uses, the scoring factors and tier floors, and which laws apply where. I built it with Claude as an AI coding assistant, then reviewed and tested every change.
 
-© 2026 Christine Portieles. All rights reserved.
+## Credit and use
 
-You're welcome to **use** the hosted tool for free. No license is granted to copy, modify, redistribute or sell the code, scoring model or content. See [LICENSE](LICENSE). For permission, contact me through GitHub ([@cmp2627](https://github.com/cmp2627)).
+The hosted tool is free to use. If you reference or build on this work, please credit **Christine Portieles** and link back to this repository.

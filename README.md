@@ -108,12 +108,6 @@ Location-specific controls appear only when relevant, for example EU conformity 
 - Laws change quickly. EU AI Act dates reflect the 2026 Digital AI Omnibus; practices it added to Art. 5 aren't encoded yet. US state law references point to laws to check rather than deciding applicability.
 - Scoring weights are a reasoned starting point, meant to be calibrated to an organization's risk appetite.
 
-## What I'd add next
-
-- Export to a JSON schema compatible with GRC platform intake forms (OneTrust, ServiceNow)
-- An AI vendor addendum linked to a third-party risk management (TPRM) workflow
-- A saved AI inventory with review dates
-- A small-practice edition in plain language, with HIPAA, FTC Safeguards and ABA Opinion 512 rule packs
 
 ## Tech
 
